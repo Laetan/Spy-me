@@ -12,7 +12,7 @@ prog.facto = function (a){
 
 prog.answer = function (b, obj){
 var answerE="";
-answerE.setEncoding("utf8");
+
 	if(b != obj.answer)
 		answerE="Perdu"
 	else
