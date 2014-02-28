@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wallpaper_ohne4"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/coTextView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="90dp"
+        android:gravity="center"
+        android:text="@string/textview"
+        android:textColor="@color/menu_text_color"
+        android:textStyle="bold"
+        android:typeface="serif" />
+
+    <TextView
+        android:id="@+id/coTextView0"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/blue_menu2"
+        android:gravity="center"
+        android:text="@string/connexion"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:typeface="serif" />
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/white_menu3" >
+
+        <TextView
+            android:id="@+id/coTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_menu3"
+            android:text="@string/id" />
+
+        <EditText
+            android:id="@+id/coEditText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/white_menu2"
+            android:ems="10"
+            android:inputType="text" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/white_menu3" >
+
+        <TextView
+            android:id="@+id/coTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_menu3"
+            android:text="@string/pw" />
+
+        <EditText
+            android:id="@+id/coEditText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/white_menu2"
+            android:ems="10"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/white_menu3" >
+
+        <Button
+            android:id="@+id/coButton1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="45dp"
+            android:background="@drawable/blue_menu_btn"
+            android:text="@string/annuler" />
+
+        <Button
+            android:id="@+id/coButton2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@drawable/blue_menu_btn"
+            android:text="@string/valider" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/coButton3"
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/black_menu"
+        android:text="@string/inscription"
+        android:textColor="@color/menu_text_color"
+        android:textStyle="bold"
+        android:typeface="serif" />
+
+</LinearLayout>

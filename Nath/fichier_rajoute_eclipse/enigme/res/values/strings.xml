@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="begin">Continuer partie</string>
+    <string name="arcades">Arcades</string>
+    <string name="option">Options</string>
+    <string name="help">Aide</string>
+    <string name="deco">Deconnexion</string>
+    <string name="message_deco">Etes-vous sûr de vouloir vous déconnecter?</string>
+    <string name="app_name">enigme</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="valider">Valider</string>
+    <string name="enigme">enigme</string>
+    <string name="connexion">CONNEXION</string>
+    <string name="inscription"><u>Inscription</u></string>
+    <string name="pw">Password</string>
+    <string name="id">Identifiant</string>
+    <string name="annuler">Annuler</string>
+    <string name="en_text">" "</string>
+    <string name="oui">"Oui"</string>
+    <string name="non">"Non"</string>
+    <string name="textview">""</string>
+    <string name="todo">TODO</string>
+
+</resources>

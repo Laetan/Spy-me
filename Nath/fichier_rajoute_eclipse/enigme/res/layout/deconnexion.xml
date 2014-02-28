@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wallpaper_ohne4"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="254dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_menu2"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:typeface="serif"
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"
+        
+        android:text="@string/deco" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="254dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/white_menu3"
+        android:gravity="center_horizontal"
+        android:text="@string/message_deco"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:typeface="serif" />
+
+    <LinearLayout
+        android:layout_width="254dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/white_menu3" >
+
+        <Button
+            android:id="@+id/bdeco1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="60dp"
+            android:background="@drawable/white_menu2"
+            android:text="@string/oui"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/bdeco2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:background="@drawable/white_menu2"
+            android:text="@string/non" />
+
+    </LinearLayout>
+
+</LinearLayout>
