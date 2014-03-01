@@ -5,21 +5,22 @@ var file = "spyme.db";
 var exists=fs.existsSync(file);
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
-var done=0;
-var tab1="";
-var tab2="";
-var tab3="";
+var done;
+var tab1;
+var tab2;
+var tab3;
 
 function readDB(query, reponse)
 {
-
+	done=0;
+	tab1=tab2=tab3="";
 	db.all("SELECT * FROM JOUEUR", function(err, row) {
 		var nb_line = row.length
 		for(var i=0; i < nb_line; i++)
 		{
-			tab1 =tab1 +row[i].id + ":" + row[i].pseudo + " -- password : "+row[i].password;
+			tab1 =tab1 +"Pseudo :" + row[i].pseudo + " -- password : "+row[i].password;
 			tab1 = tab1 + " -- level : "+row[i].niveau_joueur;
-			tab1 = tab1 + " -- score : "+row[i].point;
+			tab1 = tab1 + " -- score : "+row[i].points;
 			tab1 = tab1 + "\n";
 		}
 		done = done +1;
