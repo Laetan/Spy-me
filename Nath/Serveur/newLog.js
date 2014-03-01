@@ -1,3 +1,5 @@
+//Fonction d'inscription. OK
+
 var querystring = require("querystring");
 var util = require("util");
 var fs = require("fs");

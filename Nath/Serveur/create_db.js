@@ -1,3 +1,5 @@
+//Fichier de création de la base de donnée. N'est pas appelée par le serveur.
+
 var fs=require('fs');
 var file="spyme.db";
 var exists=fs.existsSync(file);

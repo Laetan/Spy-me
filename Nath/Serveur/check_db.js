@@ -1,3 +1,5 @@
+//Fonction de lecture de la base de donnée. Ne marche pas. Appelée par pathname "/"
+
 var fs = require("fs");
 var file = "spyme.db";
 var exists=fs.existsSync(file);
