@@ -44,11 +44,24 @@ function readDB(query, reponse)
 		var nb_line = row.length
 		for(var i=0; i < nb_line; i++)
 		{
-			tab3 = tab3 + row[i].id + ":";
 			tab3 = tab3 + " pseudo : "+row[i].pseudo;
 			tab3 = tab3 + " -- enigme : "+row[i].enigme;
 			tab3 = tab3 + " -- résolue ? : "+row[i].est_resolue;
 			tab3 = tab3 + "\n";
+		}
+		done = done +1;
+		close(reponse)
+	});
+	
+	db.all("SELECT * FROM JOUEUR_JEUX", function(err, row) {
+		var nb_line = row.length
+		for(var i=0; i < nb_line; i++)
+		{
+			tab4 = tab4 + " pseudo : "+row[i].pseudo;
+			tab4 = tab4 + " -- jeu : "+row[i].jeu;
+			tab4 = tab4 + " -- niveua ? : "+row[i].niveau;
+			tab4 = tab4 + " -- score : "+row[i].points;
+			tab4 = tab4 + "\n";
 		}
 		done = done +1;
 		close(reponse)
@@ -59,7 +72,7 @@ function readDB(query, reponse)
 function close(reponse)
 { //write the response when all table have been read
 	
-	if(done==3)
+	if(done==4)
 	{
 		reponse.writeHead(200, {"Content-type" : "text/plain"});
 		reponse.write("Going through all DataBase :\n\n");
@@ -71,6 +84,8 @@ function close(reponse)
 		reponse.write("\n");
 		reponse.write("Table : JOUEUR_ENIGMES\n");
 		reponse.write(tab3);
+		reponse.write("Table : JOUEUR_JEUX\n");
+		reponse.write(tab4);
 		reponse.end();
 	}
 }
