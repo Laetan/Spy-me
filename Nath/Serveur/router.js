@@ -20,6 +20,9 @@ router = function(handle,request,reponse)
 router.prototype.run = function(){
 	var pathname = url.parse(this.request.url).pathname;
 	var query = url.parse(this.request.url).query;
+	console.log("");
+	console.log("--------------------------------");
+	console.log("");
 	console.log("Routing / pathname : "+pathname);
 	if(typeof this.handle[pathname]==='function')
 	{
