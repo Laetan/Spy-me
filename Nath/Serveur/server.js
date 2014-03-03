@@ -7,6 +7,7 @@ function start(routeur, handle)
 	http.createServer(function(request, reponse)
 	{
 		request.setEncoding("utf-8");
+		//reponse.setEncoding("utf-8");
 		routeur(handle, request, reponse);
 
 	}).listen(8888);

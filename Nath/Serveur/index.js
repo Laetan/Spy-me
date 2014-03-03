@@ -9,7 +9,6 @@ handle["/login"] = 			requestHandler.logIn;
 handle["/logout"] = 		requestHandler.logOut;
 handle["/getenigme"] =		requestHandler.getEnigme;
 handle["getanswer"] =		requestHandler.getAnswer;
-handle["updateenigme"] = 	requestHandler.updateEnigme;
 handle["updategame"] = 		requestHandler.updateGame;
 
 serveur.start(router.route, handle);

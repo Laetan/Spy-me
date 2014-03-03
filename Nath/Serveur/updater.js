@@ -7,44 +7,30 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 
 
-function updateEnigme(query,reponse)
-{
-	var pseudo = querystring.parse(query)["pseudo"];
-	var enigma = querystring.parse(query)["enigme"];
-	var solve = querystring.parse(query)["resolue"];
+function updateEnigme(pseudo, enigma, level, solve)
+{// Modifie la bdd lors de la lecture/reponse au énigmes
+	
 
-	var stmt = "SELECT * FROM JOUEUR_ENIGMES WHERE pseudo ='"+pseudo+"' AND enigme='"+enigma+"'";
-	db.all(stmt,function(err, row)
+	var stmt="";
+	if(solve==0)
 	{
-		if(row.length==0)
-		{
-			stmt = "INSERT INTO JOUEUR_ENIGMES VALUES ('"+pseudo+"','"+enigma+"',"+solve+")";
-			db.run(stmt);
-			reponse.writeHead(200,{"Content-type":"text/plain"});
-			reponse.write("New line added in database JOUEUR_ENIGMES :\n");
-			reponse.write("pseudo : "+pseudo);
-			reponse.write("enigma : "+enigma);
-			reponse.write("state : "+solve);
-			reponse.end();
-		}
-		else if(solve==1)
-		{
-			stmt = "UPDATE JOUEUR_ENIGMES SET est_resolue=1  WHERE pseudo ='"+pseudo+"' AND enigme='"+enigma+"'";
-			db.run(stmt)
-			reponse.writeHead(200,{"Content-type":"text/plain"});
-			reponse.write("Line updated in JOUEUR_ENIGMES :\n");
-			reponse.write("pseudo : "+pseudo);
-			reponse.write("enigma : "+enigma);
-			reponse.write("state : "+solve);
-			reponse.end();
-		}
-		else
-		{
-			reponse.writeHead(200,{"Content-type":"text/plain"});
-			reponse.write("No change in database");
-			reponse.end();
-		}
-	});
+		stmt = "INSERT INTO JOUEUR_ENIGMES VALUES ('"+pseudo+"','"+enigma+"',"+solve+")";
+		db.run(stmt);
+		console.log("New line added in database JOUEUR_ENIGMES :\n");
+		console.log("pseudo : "+pseudo);
+		console.log("enigma : "+enigma);
+		console.log("state : "+solve);
+	}
+	else
+	{
+		stmt = "UPDATE JOUEUR_ENIGMES SET est_resolue=1  WHERE pseudo ='"+pseudo+"' AND enigme='"+enigma+"'";
+		db.run(stmt)
+		updateScore(pseudo, level)
+		console.log("Line updated in JOUEUR_ENIGMES :\n");
+		console.log("pseudo : "+pseudo);
+		console.log("enigma : "+enigma);
+		console.log("state : "+solve);
+	}
 }
 
 function updateLevel(pseudo, rise)
@@ -64,6 +50,24 @@ function updateLevel(pseudo, rise)
 	});
 }
 
+
+function updateScore(pseudo, level_enigme)
+{
+	var stmt = "SELECT niveau_joueur, points FROM JOUEUR WHERE pseudo='"+pseudo+"'";
+	db.serialize(function()
+	{
+		db.each(stmt, function(err,row)
+		{
+			var level = row.niveau_joueur;
+			var points = row.points;
+			points = points + (10*level_enigme/(level+1));
+		});
+	
+		stmt = "UPDATE JOUEUR SET points="+points+"  WHERE pseudo ='"+pseudo+"'";
+		db.run(stmt);
+	});
+
+}
 
 function updateGame(query,reponse)
 {
@@ -125,7 +129,6 @@ function updateGame(query,reponse)
 	});
 }
 
-
-exports.updateEnigme	=	updateEnigme;
+exports.updateEnigme 	=	updateEnigme;
 exports.updateLevel		=	updateLevel;
 exports.updateGame		=	updateGame;	

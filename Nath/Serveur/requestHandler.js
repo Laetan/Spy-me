@@ -2,12 +2,9 @@ var check_db=require("./check_db");
 var signIn = require("./newLog");
 var logInOut = require("./loginout");
 var updater=require("./updater");
-var querystring = require("querystring");
-var fs = require("fs");
-var file = "spyme.db";
-var exists=fs.existsSync(file);
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(file);
+var enigme = require("./enigme");
+
+
 
 function std(query, reponse)
 {	//Standard request answer
@@ -39,18 +36,15 @@ function logOut(query, reponse)
 function getEnigme(query, reponse)
 {	// Send an enigma to the player
 	console.log("Handled by getEnigme()");
+	enigme.getEnigme(query,reponse);
 }
 
 function getAnswer(query, reponse)
 {	// Check the player's answer
 	console.log("Handled by getAnswer()");
+	enigme.getAnswer(query,answer);
 }
 
-function updateEnigme(query,reponse)
-{	// Update the db when answering an enigma
-
-	updater.updateEnigme(query,reponse);
-}
 
 function updateGame(query, reponse)
 {	// Update the db when winning a game
@@ -66,5 +60,4 @@ exports.logIn = logIn;
 exports.logOut = logOut;
 exports.getEnigme = getEnigme;
 exports.getAnswer = getAnswer;
-exports.updateEnigme = updateEnigme;
 exports.updateGame = updateGame;

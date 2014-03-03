@@ -12,5 +12,7 @@ var db = new sqlite3.Database(file);
 	db.run("CREATE TABLE JOUEUR_JEUX (pseudo TEXT REFERENCES JOUEUR(pseudo), jeu TEXT, niveau INTEGER, points INTEGER)");
 	
 	db.run("INSERT INTO ENIGMES VALUES (1,'Enigmes/enigme01', 0)");
+	db.run("INSERT INTO ENIGMES VALUES (2,'Enigmes/enigme02', 0)");
+	db.run("INSERT INTO ENIGMES VALUES (3,'Enigmes/enigme03', 0)");
  });
 db.close();

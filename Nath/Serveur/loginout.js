@@ -15,19 +15,18 @@ function logIn(query,reponse)
 	var password = querystring.parse(query)["password"];
 	
 	var stmt = "SELECT * FROM JOUEUR WHERE pseudo ='"+pseudo+"' AND password ='"+password+"'";
-	console.log(stmt);
 	db.all(stmt, function(err, row)
 	{
 		if(row.length == 0)
 		{
 			reponse.writeHead(200, {"Content-type":"text/plain"});
-			reponse.write("010\nWrong pseudo or password");
+			reponse.write("103");
 			reponse.end();
 		}
 		else
 		{
 			reponse.writeHead(200, {"Content-type":"text/plain"});
-			reponse.write("000\npoints="+row[0].points);
+			reponse.write("100/"+row[0].points);
 			/*Send additional info
 			...
 			*/

@@ -9,16 +9,17 @@ var done;
 var tab1;
 var tab2;
 var tab3;
+var tab4;
 
 function readDB(query, reponse)
 {
 	done=0;
-	tab1=tab2=tab3="";
+	tab1=tab2=tab3=tab4="";
 	db.all("SELECT * FROM JOUEUR", function(err, row) {
 		var nb_line = row.length
 		for(var i=0; i < nb_line; i++)
 		{
-			tab1 =tab1 +"Pseudo :" + row[i].pseudo + " -- password : "+row[i].password;
+			tab1 = tab1 + "Pseudo :" + row[i].pseudo + " -- password : "+row[i].password;
 			tab1 = tab1 + " -- level : "+row[i].niveau_joueur;
 			tab1 = tab1 + " -- score : "+row[i].points;
 			tab1 = tab1 + "\n";
@@ -46,7 +47,7 @@ function readDB(query, reponse)
 		{
 			tab3 = tab3 + " pseudo : "+row[i].pseudo;
 			tab3 = tab3 + " -- enigme : "+row[i].enigme;
-			tab3 = tab3 + " -- résolue ? : "+row[i].est_resolue;
+			tab3 = tab3 + " -- resolue ? : "+row[i].est_resolue;
 			tab3 = tab3 + "\n";
 		}
 		done = done +1;
@@ -84,6 +85,7 @@ function close(reponse)
 		reponse.write("\n");
 		reponse.write("Table : JOUEUR_ENIGMES\n");
 		reponse.write(tab3);
+		reponse.write("\n");
 		reponse.write("Table : JOUEUR_JEUX\n");
 		reponse.write(tab4);
 		reponse.end();

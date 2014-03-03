@@ -1,0 +1,9 @@
+100 => tout est ok
+101 => inscription: pseudo déjà utilisé
+102 => connexion: pseudo non enregistré
+103 => connexion: password incorrecte
+104 => enigme: gagné
+105 => enigme : perdu
+106 => cannot find new enigme
+
+S'il gagne l'énigme je lui ajoute 10 pts divisés par son niveau+1 pour le moment...
