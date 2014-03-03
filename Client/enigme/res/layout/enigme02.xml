@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundholodark2"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_weight="1"
+        android:text="@string/textview"
+        android:textSize="17sp"
+        android:gravity="center"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/button1"
+        style="@style/enigme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_weight="0.16"
+        android:background="@drawable/blue_menu_btn"
+        android:text="@string/enigme" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="130dp"
+        android:layout_weight="1"
+        android:background="@drawable/white_menu"
+        android:ems="10"
+        android:inputType="textPersonName" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/button2"
+        style="@style/enigme"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:background="@drawable/green_menu_btn"
+        android:text="@string/valider" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="133dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+     
+        android:gravity="center"
+        android:text="@string/en_text"
+        android:textColor="@color/menu_text_color"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:typeface="serif" />
+
+    <ImageButton
+        android:id="@+id/retourm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/enigme"
+        android:src="@drawable/retour" />
+
+</LinearLayout>

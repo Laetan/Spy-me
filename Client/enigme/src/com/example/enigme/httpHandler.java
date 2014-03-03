@@ -14,11 +14,9 @@ public class httpHandler {
 			try {
 				
 				HttpClient htppclient = new DefaultHttpClient();
-				HttpPost httppost = new HttpPost(posturl);
-				
+				HttpPost httppost = new HttpPost(posturl);	
 				HttpResponse resp = htppclient.execute(httppost);
 				HttpEntity ent = resp.getEntity();
-				
 				String text = EntityUtils.toString(ent);
 				
 				return text;
