@@ -21,13 +21,13 @@ function newLog(query, reponse)
 		if(pseudo == "" || password == "")
 		{
 			reponse.writeHead(200, {"Content-type" : "text/plain"});
-			reponse.write("000\nError\nPseudo or Password invalid");
+			reponse.write("102");
 			reponse.end();
 		}
 		else if(row.length != 0 && pseudo != "" && password != "")
 		{
 			reponse.writeHead(200, {"Content-type" : "text/plain"});
-			reponse.write("000\nError\nPseudo already existing");
+			reponse.write("101");
 			reponse.end();
 		}
 		else
@@ -36,7 +36,7 @@ function newLog(query, reponse)
 			
 			db.run(stmt);
 			reponse.writeHead(200, {"Content-type" : "text/plain"});
-			reponse.write("999\nOK");
+			reponse.write("100");
 			reponse.end();
 		}
 	});

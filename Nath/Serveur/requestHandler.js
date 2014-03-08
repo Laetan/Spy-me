@@ -42,7 +42,7 @@ function getEnigme(query, reponse)
 function getAnswer(query, reponse)
 {	// Check the player's answer
 	console.log("Handled by getAnswer()");
-	enigme.getAnswer(query,answer);
+	enigme.getAnswer(query,reponse);
 }
 
 

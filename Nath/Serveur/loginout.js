@@ -26,7 +26,7 @@ function logIn(query,reponse)
 		else
 		{
 			reponse.writeHead(200, {"Content-type":"text/plain"});
-			reponse.write("100/"+row[0].points);
+			reponse.write("100/"+row[0].points+"/"+row[0].niveau_joueur);
 			/*Send additional info
 			...
 			*/
