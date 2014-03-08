@@ -8,7 +8,7 @@ handle["/newlog"] = 		requestHandler.newLog;
 handle["/login"] = 			requestHandler.logIn;
 handle["/logout"] = 		requestHandler.logOut;
 handle["/getenigme"] =		requestHandler.getEnigme;
-handle["getanswer"] =		requestHandler.getAnswer;
-handle["updategame"] = 		requestHandler.updateGame;
+handle["/getanswer"] =		requestHandler.getAnswer;
+handle["/updategame"] = 		requestHandler.updateGame;
 
 serveur.start(router.route, handle);

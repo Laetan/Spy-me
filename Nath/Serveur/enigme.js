@@ -1,5 +1,16 @@
 //Fonctions de choix et d'envoie d'énigme et de contrôle de réponses.
 
+/*TO DO***************
+sur le client: à chaque fois que le client appui sur gagné après une bonne rep
+				ca lui rajoute des points pour le moment, à modif
+				faire disparaitre la réponse gagné perdu quand il appui sur enigme
+				si le joueur se deco, il n'aura plus la meme enigme affichée lors de sa reconnection
+sur le serveur: implémenter la notion de points 
+				pour la réponse checker que le mot clé apparait à +- 1 lettre près
+				id temporaire nombre tres grand
+				adapté au niveau du joueur dans la fonction getEnigme
+		
+*/
 var updater = require("./updater");
 var querystring = require("querystring");
 var util = require("util");
@@ -10,138 +21,220 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 
 
-function getNewEnigme(row1, pseudo,reponse)
-{	// Find a new enigma (lowest level unresolved and unread yet)
-	console.log("Search new enigma");
-	var le = row1.length;
-	var stmt = "SELECT * FROM ENIGMES ORDER BY niveau_enigme ASC";
-	var ok = 0;
-	var id = -1;
-	var level;
-	console.log(le);
-	db.all(stmt, function(err,row2)
-	{
-		console.log(row2);
-		var la = row2.length;
-		for(var j =0; j<la; j++)
-		{
-			console.log("row2[j] = "+row2[j]);
-			if(id==-1)
-			{
-				ok=1;
-				for(var i =0; i< le; i++)
-				{
-					if(row2[j].id == row1[i].enigme){ok=0;break;}
-				}
-				
-				if(ok==1){id=row2[j].id; level=row2[j].niveau_enigme;break;}
-			}
-		
-		}
-		
-		if(id==-1)
-		{
-			console.log("Cannot find new enigma");
-			reponse.writeHead(200, {"Content-type":"text/plain"});
-			reponse.write("106"); // Cannot find new enigma
-			reponse.end();
-		}
-		else
-		{
-			//updater.updateEnigme(pseudo, id, level, 0);
-			readEnigme(id,reponse);
-		}
-		
-	});
-}
+//----------------------------------------------------------------------------------------------------------------------------------------
+//************************************fonctions relatives au traitement de l'envoi de l'énoncé****************************************************
+//----------------------------------------------------------------------------------------------------------------------------------------
 
-function readEnigme(id, reponse)
-{	//Lit le contenu de l'enigme
-	console.log("Read enigma "+id);
-	var stmt = "SELECT path, niveau_enigme FROM ENIGMES WHERE id = "+id;
-	db.each(stmt, function(err,row)
-	{
-		var path = row.path+"/enigme.json";
-		var level = row.niveau_enigme;
+/**
+*fonction relative à l'envoi de la description de l'enigme. Récupère la description de l'énigme dans son fichier JSON 
+*et l'envoie au client.
+*param id: id de l'énigme
+*param reponse: objet pour emettre une réponse au client
+*param path: chemin d'accès du fichier JSON contenant l'enigme
+*ne retourne rien
+*/
+function sendEnigme(id,reponse,path)
+{
 		var enigme=fs.readFileSync(path);
 		enigme=JSON.parse(enigme);
 		enigme=enigme.description;
-		
 		reponse.writeHead(200,{"Content-type":"text/plain; charset=utf-8"});
-		reponse.write("000/"+level+"/"+enigme);
+		reponse.write("100/"+id+"/"+enigme);
 		reponse.end();
+}
+
+/**
+*fonction relative à l'envoi de la description de l'enigme. Cas où le joueur lit une énigme pour la première fois.
+*enregistre dans la table JOUEUR_ENIGMES l'id de l'enigme ainsi que le pseudo du joueur
+*selectionne le chemin du fichier JSON relatif à l'énigme et appelle la fonction sendEnigme
+*param pseudo: pseudo du joueur
+*param id: id de l'énigme
+*reponse: objet permettant d'émettre une réponse au client
+*ne retourne rien
+*/
+function readEnigme(pseudo,id,reponse)
+{
+	console.log("Read enigma "+id);
+	var path;
+	db.run("INSERT INTO JOUEUR_ENIGMES VALUES('"+pseudo+"','"+id+"',0)");
+	var stmt2="SELECT path FROM ENIGMES WHERE id='"+id+"'ORDER BY id ASC";
+	db.all(stmt2,function(err,row2){
+		path = row2[0].path+"/enigme.json";
+		sendEnigme(id,reponse,path);
 	});
 }
 
+/**
+*fonction relative à l'envoi de la description de l'enigme.
+*cas où le joueur a déjà lu l'énigme mais ne l'a pas encore résolue
+*renvoie au client un code d'erreur s'il a déjà fait toutes les énigmes auxquelles il a accès
+*selectionne le chemin du fichier JSON relatif à l'énigme et appelle la fonction sendEnigme
+*param pseudo: pseudo du joueur
+*param id: id de l'énigme
+*reponse: objet permettant d'émettre une réponse au client
+*ne retourne rien
+*/
+function readEnigme2(pseudo,id,reponse)
+{
+	console.log("Read enigma "+id);
+	var path;
+	var stmt2="SELECT ENIGMES.id, ENIGMES.path FROM ENIGMES, JOUEUR_ENIGMES WHERE ENIGMES.id=JOUEUR_ENIGMES.enigme AND JOUEUR_ENIGMES.est_resolue=0 ORDER BY RANDOM()";
+	db.all(stmt2, function(err, row2){
+		if(row2.length==0){
+			reponse.writeHead(200,{"Content-type":"text/plain; charset=utf-8"});
+			reponse.write("106");
+			reponse.end();
+		}
+		else{
+			id=row2[0].id;
+			path = row2[0].path+"/enigme.json";
+			sendEnigme(id,reponse,path);
+		}
+	});
+}
+
+/**
+*fonction relative à l'envoi de la description de l'enigme. Appelée à chaque nouvelle demande d'énigme
+*Affiche d'abord les énigmes non lues dans l'ordre des id_enigme (appel de readEnigme)
+*sinon affiche les énigmes non résolues dans un ordre aléatoire (appel de readEnigme2) 
+*selectionne le chemin du fichier JSON relatif à l'énigme et appelle la fonction sendEnigme
+*param query: objet contenant la requête du client
+*param reponse: objet permettant d'émettre une réponse au client
+*ne retourne rien
+*/
 function getEnigme(query, reponse)
 {
 	console.log("Get Enigma");
 	var pseudo = querystring.parse(query).pseudo;
-	var id_enigme = querystring.parse(query).id;
-	var enigma_found=0;
-	if(id_enigme)
-	{
-	//A completer : enigme attaché aux fichiers débloqués.
+	var id;
+	var stmt="SELECT JOUEUR_ENIGMES.enigme, ENIGMES.niveau_enigme FROM JOUEUR_ENIGMES, JOUEUR, ENIGMES WHERE JOUEUR.pseudo='"+pseudo+"' AND JOUEUR_ENIGMES.pseudo=JOUEUR.pseudo AND JOUEUR_ENIGMES.enigme=ENIGMES.id AND ENIGMES.niveau_enigme<=JOUEUR.niveau_joueur ORDER BY JOUEUR_ENIGMES.enigme DESC";
+	db.all(stmt, function(err, row){
+		if(row.length==0){
+			id=(0*100)+1; //a changer pour chaque niveau
+			readEnigme(pseudo,id,reponse);
+		}
+		else if(row[0].enigme<((1+row[0].niveau_enigme)*100)){
+			id=row[0].enigme+1;
+			readEnigme(pseudo,id,reponse);
+		}
+		else{
+			readEnigme2(pseudo,id,reponse);
+		}
+	  });
+}
+//----------------------------------------------------------------------------------------------------------------------------------------
+//************************************fonctions relatives au traitement de la réponse****************************************************
+//----------------------------------------------------------------------------------------------------------------------------------------
+/**fonciton relative à l'analyse de la réponse. Repère la présence de & dans une chaine de caractères
+* les différents mots clés qui doivent apparaitre dans la réponse donnée sont séparés par un &
+*param a: la cdc à analyser
+*retourne un entier (1 si la chaine contient un "&" 0 sinon)
+*/
+function isThereEt(a){
+	if(a.indexOf('&')!=-1){
+		return 1;
 	}
-	else
-	{
-		var stmt = "SELECT enigme, est_resolue FROM JOUEUR_ENIGMES WHERE pseudo='"+pseudo+"'";
-		db.all(stmt, function(err,row)
-		{
-			var nb_enigme = row.length;
-			for(var i=0; i<nb_enigme;i++)
-			{
-				if(row[i].est_resolue==0)
-				{
-					enigma_found=1;
-					readEnigme(row[i].enigme, reponse);
-					break;
-				}
-			}
-			if(enigma_found==0){getNewEnigme(row,pseudo, reponse);}
-			
-		});
-	}
+	return 0;
 }
 
+/**
+*fonction relative à l'analyse de la réponse. Check si la cdc entrée par l'utilisateur
+*est égale +- à un caractère près a une des réponses possibles (ensemble de mots clés)
+*param b: Text : réponse entrée par l'utilisateur
+*param d: Tableau de cdc :ensemble des réponses possibles constituées de plusieurs mots clés
+*retourne un entier (0 si la réponse ne correspond pas, 1 sinon)
+*/
+function correctAnswer3(b, d){
+	for(var i=0;i<d.length;i++){
+		if(b.search(d[i])==-1){
+			return 0;
+		}
+	}
+return 1;
+}
 
+/**
+*fonction relative à l'analyse de la réponse. Check si la cdc entrée par l'utilisateur
+*est égale +- à un caractère près à une des réponses possibles (un seul mot clé)
+*param b: Text : réponse entrée par l'utilisateur
+*param d: Tableau de cdc :ensemble des réponses possibles constituée d'un seul mot clé
+*retourne un entier (0 si la réponse ne correspond pas, 1 sinon)
+*/
+function correctAnswer2(b, c){
+	if(b.search(c)!=-1){
+		return 1;
+	}
+	return 0;
+}
 
+/**
+*fonction relative à la réponse, appelle les fonctions isThereEt, correctAnswer3,correctAnswer2
+*update la table JOUEUR_ENIGMES si la résolution de l'énigme est exacte
+*param enigme:ensemble des réponses correctes
+*param pAnswer: réponse donnée par l'utilisateur
+*param id: id de l'énigme
+*retourne un code (104 pour gagné, 105 pour perdu)
+*/
+function correctAnswer(enigme,pAnswer,id){
+	var choicesTab=enigme.split(',');
+	for(var i=0;i<choicesTab.length;i++)
+	{
+		if (isThereEt(choicesTab[i])==1){
+		var choices2=choicesTab[i].split('&');
+		//util.log(util.inspect(choices2));
+			if(correctAnswer3(pAnswer,choices2)==1){
+				db.run("UPDATE JOUEUR_ENIGMES SET est_resolue=1 WHERE enigme='"+id+"'");
+				return 104;
+			}
+		}
+		else
+			if(correctAnswer2(pAnswer,choicesTab[i])==1){
+				db.run("UPDATE JOUEUR_ENIGMES SET est_resolue=1 WHERE enigme='"+id+"'");
+				return 104;
+			}
+	}
+	return 105;
+};
 
+/**
+*fonction relative à la réponse, appelle la fonction correctAnswer
+*renvoie une réponse au client pour lui dire si la réponse est bonne ou non
+*param path: chemin du fichier JSON contenant l'énigme
+*param reponse: objet reponse permettant d'émettre une réponse au client
+*param pAnswer: réponse donnée par l'utilisateur
+*param id: id de l'énigme
+*/
+function checkAnswer(path,reponse,pAnswer,id){
+	var enigme=fs.readFileSync(path);
+	enigme=JSON.parse(enigme);
+	enigme=enigme.answer;
+	reponse.writeHead(200,{"Content-type":"text/plain; charset=utf-8"});
+	reponse.write(correctAnswer(enigme,pAnswer,id)+"");
+	reponse.end();
 
+}
+
+/**
+*fonction relative à la réponse, appelle la fonction checkAnswer
+*fait une requete à la db pour obtenir le path relatif à l'énigme en cours de traitement
+*param query: requête du client
+*param reponse: objet reponse permettant d'émettre une réponse au client
+ne renvoie rien
+*/
 function getAnswer(query,reponse)
 {
 	var pseudo = querystring.parse(query).pseudo;
-	var id = querystring.parse(query).id;
+	var id = querystring.parse(query).id_enigme;
 	var pAnswer = querystring.parse(query).answer;
-	
-	var stmt = "SELECT path, niveau_enigme FROM ENIGMES WHERE id = "+id;
-	db.each(stmt, function(err,row)
-	{
-		var path=row.path+"/enigme.json";
-		var answers=JSON.parse(fs.readFileSynch(path)).answer;
-		answers=answers.split(',');
-		var nb_answers= answers.length;
-		
-		for(var i = 0; i<nb_answers; i++)
-		{
-			anwers[i]=answers[i].swplit('&');
-			if(pAnswer.search(answers[i]) != -1)
-			{
-				updateEnigme(pseudo, id, row.niveau_enigme, 1);
-				reponse.writeHead(200, {"Content-type":"text/plain"});
-				reponse.write("101");
-				reponse.end();
-			}
-			else
-			{
-				reponse.writeHead(200, {"Content-type":"text/plain"});
-				reponse.write("102");
-				reponse.end();
-			}
-		}
+	var stmt3="SELECT path FROM ENIGMES WHERE id='"+id+"'";
+	db.all(stmt3,function(err,row3){
+		path = row3[0].path+"/enigme.json";
+		console.log(path);
+		checkAnswer(path,reponse,pAnswer,id);
 	});
 }
+	
 
 
-
+exports.getAnswer=getAnswer;
 exports.getEnigme=getEnigme;
