@@ -1,3 +1,4 @@
+
 var querystring = require("querystring");
 var util = require("util");
 var Chance = require("chance")
@@ -8,9 +9,12 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
 var chance = new Chance();
 
+
+//Fonction de création d'id temporaire
 function newIdTemp(pseudo)
 {
-	var idTemp=chance.integer();
+	var idTemp = 0;
+	while(idTemp==0){idTemp = chance.integer();}
 	
 	var stmt = "UPDATE JOUEUR SET id_temp="+idTemp+" WHERE pseudo='"+pseudo+"'";
 	
@@ -18,6 +22,9 @@ function newIdTemp(pseudo)
 	console.log("new id : "+idTemp);
 	return idTemp;	
 }
+
+// Fonction de récupération du pseudo à partir de l'id
+// Intègre le pseudo dans le query
 
 function getPseudo(pathname, query, handle, reponse)
 {
@@ -30,8 +37,6 @@ function getPseudo(pathname, query, handle, reponse)
 		if(row.length!=0)
 		{
 			query+="&pseudo="+row[0].pseudo;
-			//query.pseudo = row[0].pseudo
-			console.log(query);
 			console.log("Convert id to pseudo : "+querystring.parse(query).pseudo);
 			handle[pathname](query, reponse);
 		}
