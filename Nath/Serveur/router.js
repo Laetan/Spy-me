@@ -1,5 +1,8 @@
 var url = require("url");
-
+var cryptage = require("./cryptage");
+var util = require("util");
+var querystring = require("querystring");
+var EventEmitter = require("events").EventEmitter;
 
 function route(handle,request, reponse)
 {
@@ -20,13 +23,24 @@ router = function(handle,request,reponse)
 router.prototype.run = function(){
 	var pathname = url.parse(this.request.url).pathname;
 	var query = url.parse(this.request.url).query;
+	if(query)
+		var id = querystring.parse(query).id;
 	console.log("");
 	console.log("--------------------------------");
 	console.log("");
-	console.log("Routing / pathname : "+pathname);
+	console.log("Routing :: pathname : "+pathname);
 	if(typeof this.handle[pathname]==='function')
 	{
-		this.handle[pathname](query, this.reponse);
+		console.log(id);
+		if(id)
+		{
+			console.log("Pseudo needed :: id ="+id);
+			cryptage.getPseudo(pathname, query, this.handle, this.reponse);
+		}
+		else
+		{
+			this.handle[pathname](query, this.reponse);
+		}
 	}
 	else
 	{

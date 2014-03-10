@@ -1,5 +1,5 @@
 //Fonction d'inscription. OK
-
+var cryptage = require("./cryptage");
 var querystring = require("querystring");
 var util = require("util");
 var fs = require("fs");
@@ -32,12 +32,17 @@ function newLog(query, reponse)
 		}
 		else
 		{
-			stmt = "INSERT INTO JOUEUR VALUES('"+pseudo+"','"+password+"',0,0)"
 			
-			db.run(stmt);
-			reponse.writeHead(200, {"Content-type" : "text/plain"});
-			reponse.write("100");
-			reponse.end();
+			stmt = "INSERT INTO JOUEUR VALUES('"+pseudo+"','"+password+"',0,0,0)"
+			
+			db.run(stmt, function(err)
+			{
+				var idTemp = cryptage.newIdTemp(pseudo);
+				reponse.writeHead(200, {"Content-type" : "text/plain"});
+				reponse.write("100/"+idTemp);
+				reponse.end();
+			});
+			
 		}
 	});
 }

@@ -20,6 +20,7 @@ function readDB(query, reponse)
 		for(var i=0; i < nb_line; i++)
 		{
 			tab1 = tab1 + "Pseudo :" + row[i].pseudo + " -- password : "+row[i].password;
+			tab1 = tab1 + " -- id : "+row[i].id_temp;
 			tab1 = tab1 + " -- level : "+row[i].niveau_joueur;
 			tab1 = tab1 + " -- score : "+row[i].points;
 			tab1 = tab1 + "\n";

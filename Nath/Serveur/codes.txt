@@ -5,5 +5,4 @@
 104 => enigme: gagné
 105 => enigme : perdu
 106 => cannot find new enigme
-
-S'il gagne l'énigme je lui ajoute 10 pts divisés par son niveau+1 pour le moment...
+107 => Invalid Id Temp
