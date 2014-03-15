@@ -3,6 +3,7 @@ var signIn = require("./newLog");
 var logInOut = require("./loginout");
 var updater=require("./updater");
 var enigme = require("./enigme");
+var reinit=require("./reinit");
 
 
 
@@ -45,6 +46,12 @@ function getAnswer(query, reponse)
 	enigme.getAnswer(query,reponse);
 }
 
+function reinitialisation(query, reponse)
+{	// Update the db when winning a game
+
+	reinit.reinitialisation(query, reponse);
+}
+
 
 function updateGame(query, reponse)
 {	// Update the db when winning a game
@@ -61,3 +68,4 @@ exports.logOut = logOut;
 exports.getEnigme = getEnigme;
 exports.getAnswer = getAnswer;
 exports.updateGame = updateGame;
+exports.reinitialisation=reinitialisation;

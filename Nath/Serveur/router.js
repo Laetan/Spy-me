@@ -4,6 +4,8 @@ var util = require("util");
 var querystring = require("querystring");
 var EventEmitter = require("events").EventEmitter;
 
+
+
 function route(handle,request, reponse)
 {
 	var r=new router(handle,request, reponse);
@@ -25,13 +27,12 @@ router.prototype.run = function(){
 	var query = url.parse(this.request.url).query;
 	if(query)
 		var id = querystring.parse(query).id;
-	console.log("");
-	console.log("--------------------------------");
-	console.log("");
+
 	console.log("Routing :: pathname : "+pathname);
 	if(typeof this.handle[pathname]==='function')
 	{
-		console.log(id);
+		//this.handle[pathname](query, this.reponse);
+				console.log(id);
 		if(id)
 		{
 			console.log("Pseudo needed :: id ="+id);
@@ -41,6 +42,7 @@ router.prototype.run = function(){
 		{
 			this.handle[pathname](query, this.reponse);
 		}
+
 	}
 	else
 	{

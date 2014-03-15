@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wallpaper_ohne4"
+    android:orientation="vertical" >
+
+   <TextView
+       android:id="@+id/opTextView1"
+       android:layout_width="300dp"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center"
+       android:layout_marginTop="140dp"
+       android:background="@drawable/blue_menu2"
+       android:gravity="center"
+       android:text="@string/option"
+       android:textSize="20sp"
+       android:textStyle="bold"
+       android:typeface="serif" />
+
+   <LinearLayout
+       android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/white_menu3" >
+
+       <TextView
+           android:id="@+id/opTextView2"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginRight="60dp"
+           android:text="@string/son" />
+
+       <CheckBox
+           android:id="@+id/opCheckBox1"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:checked="true"
+           android:text="@string/oui" />
+
+       <CheckBox
+           android:id="@+id/opCheckBox2"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/non" />
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:layout_width="300dp"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center"
+       android:background="@drawable/white_menu3" >
+
+       <TextView
+           android:id="@+id/opTextView3"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginRight="53dp"
+           android:text="@string/effet" />
+
+       <CheckBox
+           android:id="@+id/opCheckBox3"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/oui" />
+
+       <CheckBox
+           android:id="@+id/opCheckBox4"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/non" />
+
+   </LinearLayout>
+   
+    <Button
+        android:id="@+id/opButton1"
+        android:layout_width="272dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/green_menu_btn"
+        android:gravity="center"
+        android:text="@string/reinit"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:typeface="serif" />
+    
+    <ImageButton
+        android:id="@+id/opRetour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:contentDescription="@string/enigme"
+        android:src="@drawable/retour" />
+   
+</LinearLayout>

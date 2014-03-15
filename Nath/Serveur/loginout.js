@@ -1,7 +1,8 @@
 //Fonctions de log in et log out
-var cryptage = require("./cryptage");
+
 var querystring = require("querystring");
 var util = require("util");
+var cryptage = require("./cryptage");
 var fs = require("fs");
 var file = "spyme.db";
 var exists=fs.existsSync(file);
@@ -25,7 +26,8 @@ function logIn(query,reponse)
 		}
 		else
 		{
-			var idTemp = cryptage.newIdTemp(pseudo)
+			var idTemp = cryptage.newIdTemp(pseudo);
+			db.run("UPDATE JOUEUR SET id_temp='"+idTemp+"' WHERE pseudo='"+pseudo+"'");
 			reponse.writeHead(200, {"Content-type":"text/plain"});
 			reponse.write("100/"+idTemp+"/"+row[0].points+"/"+row[0].niveau_joueur);
 			/*Send additional info

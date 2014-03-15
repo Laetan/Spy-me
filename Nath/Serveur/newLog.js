@@ -1,5 +1,5 @@
 //Fonction d'inscription. OK
-var cryptage = require("./cryptage");
+
 var querystring = require("querystring");
 var util = require("util");
 var fs = require("fs");
@@ -7,6 +7,7 @@ var file = "spyme.db";
 var exists=fs.existsSync(file);
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(file);
+var cryptage = require("./cryptage");
 
 function newLog(query, reponse)
 {
@@ -32,17 +33,13 @@ function newLog(query, reponse)
 		}
 		else
 		{
-			
-			stmt = "INSERT INTO JOUEUR VALUES('"+pseudo+"','"+password+"',0,0,0)"
-			
-			db.run(stmt, function(err)
-			{
-				var idTemp = cryptage.newIdTemp(pseudo);
-				reponse.writeHead(200, {"Content-type" : "text/plain"});
-				reponse.write("100/"+idTemp);
-				reponse.end();
-			});
-			
+			var idTemp = cryptage.newIdTemp(pseudo);
+			stmt = "INSERT INTO JOUEUR VALUES('"+pseudo+"','"+password+"','"+idTemp+"',0,0)"
+			db.run(stmt);
+			reponse.writeHead(200, {"Content-type" : "text/plain"});
+			reponse.write("100/"+idTemp);
+			reponse.end();
+
 		}
 	});
 }

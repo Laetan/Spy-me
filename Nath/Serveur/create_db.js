@@ -10,9 +10,13 @@ var db = new sqlite3.Database(file);
 	db.run("CREATE TABLE ENIGMES (id INTEGER PRIMARY KEY, path TEXT, niveau_enigme INTEGER)");
 	db.run("CREATE TABLE JOUEUR_ENIGMES (pseudo TEXT , enigme INTEGER, est_resolue INTEGER, FOREIGN KEY(pseudo) REFERENCES JOUEUR(pseudo),FOREIGN KEY(enigme) REFERENCES ENIGMES(id))");
 	db.run("CREATE TABLE JOUEUR_JEUX (pseudo TEXT REFERENCES JOUEUR(pseudo), jeu TEXT, niveau INTEGER, points INTEGER)");
-	
-	db.run("INSERT INTO ENIGMES VALUES (1,'Enigmes/enigme01', 0)");
-	db.run("INSERT INTO ENIGMES VALUES (2,'Enigmes/enigme02', 0)");
-	db.run("INSERT INTO ENIGMES VALUES (3,'Enigmes/enigme03', 0)");
+	 var stmt = db.prepare("INSERT INTO ENIGMES VALUES (?,?,?)");
+  for (var i = 1; i < 101; i++) {
+      stmt.run(i,"./Enigmes/enigme" + i,0);
+  }
+  stmt.finalize();
+
+	//db.run("INSERT INTO ENIGMES VALUES (i,'./Enigmes/enigme'+i, 0)");
+
  });
 db.close();

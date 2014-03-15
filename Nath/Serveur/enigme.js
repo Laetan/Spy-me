@@ -1,14 +1,14 @@
 //Fonctions de choix et d'envoie d'énigme et de contrôle de réponses.
 
 /*TO DO***************
-sur le client: à chaque fois que le client appui sur gagné après une bonne rep
-				ca lui rajoute des points pour le moment, à modif
-				faire disparaitre la réponse gagné perdu quand il appui sur enigme
-				si le joueur se deco, il n'aura plus la meme enigme affichée lors de sa reconnection
+sur le client: si le joueur se deco, il n'aura plus la meme enigme affichée lors de sa reconnection
+				mettre un logo
+				adapter les layout aux differentes tailles d'écrans
+				recevoir une image
 sur le serveur: implémenter la notion de points 
 				pour la réponse checker que le mot clé apparait à +- 1 lettre près
-				id temporaire nombre tres grand
 				adapté au niveau du joueur dans la fonction getEnigme
+				envoyer une image
 		
 */
 var updater = require("./updater");
@@ -52,11 +52,14 @@ function sendEnigme(id,reponse,path)
 *reponse: objet permettant d'émettre une réponse au client
 *ne retourne rien
 */
-function readEnigme(pseudo,id,reponse)
+function readEnigme(idTemp,id,reponse)
 {
 	console.log("Read enigma "+id);
 	var path;
-	db.run("INSERT INTO JOUEUR_ENIGMES VALUES('"+pseudo+"','"+id+"',0)");
+	var stmt="SELECT pseudo FROM JOUEUR WHERE id_temp='"+idTemp+"'";
+	db.all(stmt,function(err,row){
+	db.run("INSERT INTO JOUEUR_ENIGMES VALUES('"+row[0].pseudo+"','"+id+"',0)");
+	});
 	var stmt2="SELECT path FROM ENIGMES WHERE id='"+id+"'ORDER BY id ASC";
 	db.all(stmt2,function(err,row2){
 		path = row2[0].path+"/enigme.json";
@@ -74,7 +77,7 @@ function readEnigme(pseudo,id,reponse)
 *reponse: objet permettant d'émettre une réponse au client
 *ne retourne rien
 */
-function readEnigme2(pseudo,id,reponse)
+function readEnigme2(id,reponse)
 {
 	console.log("Read enigma "+id);
 	var path;
@@ -105,20 +108,21 @@ function readEnigme2(pseudo,id,reponse)
 function getEnigme(query, reponse)
 {
 	console.log("Get Enigma");
-	var pseudo = querystring.parse(query).pseudo;
+	var idTemp = querystring.parse(query).idTemp;
 	var id;
-	var stmt="SELECT JOUEUR_ENIGMES.enigme, ENIGMES.niveau_enigme FROM JOUEUR_ENIGMES, JOUEUR, ENIGMES WHERE JOUEUR.pseudo='"+pseudo+"' AND JOUEUR_ENIGMES.pseudo=JOUEUR.pseudo AND JOUEUR_ENIGMES.enigme=ENIGMES.id AND ENIGMES.niveau_enigme<=JOUEUR.niveau_joueur ORDER BY JOUEUR_ENIGMES.enigme DESC";
+	var stmt="SELECT JOUEUR_ENIGMES.enigme,JOUEUR.pseudo, ENIGMES.niveau_enigme FROM JOUEUR_ENIGMES, JOUEUR, ENIGMES WHERE JOUEUR.id_temp='"+idTemp+"' AND JOUEUR_ENIGMES.pseudo=JOUEUR.pseudo AND JOUEUR_ENIGMES.enigme=ENIGMES.id AND ENIGMES.niveau_enigme<=JOUEUR.niveau_joueur ORDER BY JOUEUR_ENIGMES.enigme DESC";
 	db.all(stmt, function(err, row){
 		if(row.length==0){
 			id=(0*100)+1; //a changer pour chaque niveau
-			readEnigme(pseudo,id,reponse);
+			readEnigme(idTemp,id,reponse);
 		}
 		else if(row[0].enigme<((1+row[0].niveau_enigme)*100)){
+		util.log(util.inspect(row));
 			id=row[0].enigme+1;
-			readEnigme(pseudo,id,reponse);
+			readEnigme(idTemp,id,reponse);
 		}
 		else{
-			readEnigme2(pseudo,id,reponse);
+			readEnigme2(id,reponse);
 		}
 	  });
 }
@@ -168,6 +172,19 @@ function correctAnswer2(b, c){
 }
 
 /**
+*fonction getNiveau_enigme
+*/
+
+function getNiveauEnigme(idEnigme){
+	var stmt="SELECT niveau_enigme FROM ENIGMES WHERE id='"+idEnigme+"'";
+	var niveau=0;
+	db.all(stmt,function(err,row3){
+		niveau=row3[0].niveau_enigme;
+	});
+	return niveau;
+}
+
+/**
 *fonction relative à la réponse, appelle les fonctions isThereEt, correctAnswer3,correctAnswer2
 *update la table JOUEUR_ENIGMES si la résolution de l'énigme est exacte
 *param enigme:ensemble des réponses correctes
@@ -175,7 +192,7 @@ function correctAnswer2(b, c){
 *param id: id de l'énigme
 *retourne un code (104 pour gagné, 105 pour perdu)
 */
-function correctAnswer(enigme,pAnswer,id){
+function correctAnswer(enigme,pAnswer,id,idTemp){
 	var choicesTab=enigme.split(',');
 	for(var i=0;i<choicesTab.length;i++)
 	{
@@ -183,13 +200,13 @@ function correctAnswer(enigme,pAnswer,id){
 		var choices2=choicesTab[i].split('&');
 		//util.log(util.inspect(choices2));
 			if(correctAnswer3(pAnswer,choices2)==1){
-				db.run("UPDATE JOUEUR_ENIGMES SET est_resolue=1 WHERE enigme='"+id+"'");
+				db.run("UPDATE JOUEUR_ENIGMES SET est_resolue=1 WHERE enigme='"+id+"'AND pseudo=(SELECT pseudo FROM JOUEUR WHERE id_temp='"+idTemp+"')");
 				return 104;
 			}
 		}
 		else
 			if(correctAnswer2(pAnswer,choicesTab[i])==1){
-				db.run("UPDATE JOUEUR_ENIGMES SET est_resolue=1 WHERE enigme='"+id+"'");
+				db.run("UPDATE JOUEUR_ENIGMES SET est_resolue=1 WHERE enigme='"+id+"'AND pseudo=(SELECT pseudo FROM JOUEUR WHERE id_temp='"+idTemp+"')");
 				return 104;
 			}
 	}
@@ -204,12 +221,12 @@ function correctAnswer(enigme,pAnswer,id){
 *param pAnswer: réponse donnée par l'utilisateur
 *param id: id de l'énigme
 */
-function checkAnswer(path,reponse,pAnswer,id){
+function checkAnswer(path,reponse,pAnswer,id,idTemp){
 	var enigme=fs.readFileSync(path);
 	enigme=JSON.parse(enigme);
 	enigme=enigme.answer;
 	reponse.writeHead(200,{"Content-type":"text/plain; charset=utf-8"});
-	reponse.write(correctAnswer(enigme,pAnswer,id)+"");
+	reponse.write(correctAnswer(enigme,pAnswer,id,idTemp)+"");
 	reponse.end();
 
 }
@@ -223,14 +240,14 @@ ne renvoie rien
 */
 function getAnswer(query,reponse)
 {
-	var pseudo = querystring.parse(query).pseudo;
+	var idTemp = querystring.parse(query).idTemp;
 	var id = querystring.parse(query).id_enigme;
 	var pAnswer = querystring.parse(query).answer;
 	var stmt3="SELECT path FROM ENIGMES WHERE id='"+id+"'";
 	db.all(stmt3,function(err,row3){
 		path = row3[0].path+"/enigme.json";
 		console.log(path);
-		checkAnswer(path,reponse,pAnswer,id);
+		checkAnswer(path,reponse,pAnswer,id,idTemp);
 	});
 }
 	
