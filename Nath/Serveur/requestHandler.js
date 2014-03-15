@@ -4,6 +4,7 @@ var logInOut = require("./loginout");
 var updater=require("./updater");
 var enigme = require("./enigme");
 var reinit=require("./reinit");
+var uppoints=require("./updatePoints");
 
 
 
@@ -59,6 +60,11 @@ function updateGame(query, reponse)
 	updater.updateGame(query, reponse);
 }
 
+function updatePoints(query, reponse)
+{	// Update the db when winning a game
+	uppoints.updatePoints(query, reponse);
+}
+
 
 
 exports.std = std;
@@ -69,3 +75,4 @@ exports.getEnigme = getEnigme;
 exports.getAnswer = getAnswer;
 exports.updateGame = updateGame;
 exports.reinitialisation=reinitialisation;
+exports.updatePoints=updatePoints;

@@ -3,6 +3,8 @@
 package com.example.enigme;
 import java.security.Policy;
 
+import com.example.enigme.R.string;
+
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.StrictMode;
@@ -221,7 +223,10 @@ public class MainActivity extends Activity {
     public void checkAnswerEnigme(int code,TextView t)
     {
     	if(decodeServ(code,t)==1){
+    		httpHandler handler2 = new httpHandler();
     		nbPoints+=10/(niveau+1);
+    		System.out.println(nbPoints);
+      	  String txt2 =(handler2.post("http://192.168.5.199:8888/updatepoints?idTemp="+id_temp+"&nbPoints="+nbPoints));	
     	}
     }
     /****fonction relative à l'enigme****
@@ -402,10 +407,12 @@ public class MainActivity extends Activity {
 	        //fonction relative au bouton "réinitialiser"
 	        bReinit.setOnClickListener(new View.OnClickListener() {
 		          public void onClick(View v) { 
-		        httpHandler handler2 = new httpHandler();
-		        String txt2 =(handler2.post("http://192.168.5.199:8888/reinitialisation?pseudo="+pseudo));
-	        	  setContentView(R.layout.design_try0);
-	        	  setButtonClickListener(); 
+		        	  httpHandler handler2 = new httpHandler();
+		        	  String txt2 =handler2.post("http://192.168.5.199:8888/reinitialisation?pseudo="+pseudo);
+		        	  nbPoints=0;
+		        	  niveau=0;
+		        	  setContentView(R.layout.design_try0);
+		        	  setButtonClickListener(); 
 		          } 
 		        }); 
 	 

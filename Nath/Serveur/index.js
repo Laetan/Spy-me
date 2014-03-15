@@ -12,5 +12,6 @@ handle["/enigme"] =	requestHandler.getEnigme;
 handle["/answer"] =	requestHandler.getAnswer;
 handle["/updategame"] = requestHandler.updateGame;
 handle["/reinitialisation"] = requestHandler.reinitialisation;
+handle["/updatepoints"] = requestHandler.updatePoints;
 
 serveur.start(router.route, handle);

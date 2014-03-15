@@ -12,15 +12,16 @@ var db = new sqlite3.Database(file);
 * set le niveau du joueur à 0, ses points à 0, et efface toutes les données relative au joueur en BDD
 *renvoie 127 au client
 */
-function reinitialisation(query,reponse){
+function updatePoints(query,reponse){
 
-var pseudo = querystring.parse(query)["pseudo"];
-var stmt="UPDATE JOUEUR SET points=0, niveau_joueur=0 WHERE pseudo='"+pseudo+"'";
+var idTemp = +querystring.parse(query)["idTemp"];
+var nbPoints = querystring.parse(query)["nbPoints"];
+
+var stmt="UPDATE JOUEUR SET points="+nbPoints+" WHERE id_temp='"+idTemp+"'";
 db.run(stmt);
-db.run("DELETE FROM JOUEUR_ENIGMES WHERE pseudo='"+pseudo+"'");
-	reponse.writeHead(200, {"Content-type":"text/plain"});
-	reponse.write("127");
-	reponse.end();
+reponse.writeHead(200, {"Content-type":"text/plain"});
+reponse.write("127");
+reponse.end();
 }
 
-exports.reinitialisation = reinitialisation;
+exports.updatePoints = updatePoints;
