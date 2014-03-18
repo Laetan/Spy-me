@@ -18,7 +18,7 @@ public class FileNinja extends Game {
 	public void create() {
 
 		batch = new SpriteBatch();
-		font = new BitmapFont();
+		font = new BitmapFont(true);
 		
 		this.setScreen(new MainScreen(this));
 	}

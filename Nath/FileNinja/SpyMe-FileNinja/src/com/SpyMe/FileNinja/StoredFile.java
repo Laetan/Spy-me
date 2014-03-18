@@ -40,6 +40,7 @@ public final class StoredFile extends Rectangle implements Poolable{
 	public void add(){
 		stored++;
 		display = true;
+		if(stored >= 10) dispose();
 	}
 	
 	public void move(int place){
@@ -74,7 +75,7 @@ public final class StoredFile extends Rectangle implements Poolable{
 	public void reset() {
 		// TODO Auto-generated method stub
 		fileType = -1;
-		stored = 1;
+		stored = 0;
 		moving = false;
 		toDispose = false;
 		display = false;

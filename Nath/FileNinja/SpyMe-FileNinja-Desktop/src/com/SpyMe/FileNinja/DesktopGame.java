@@ -15,7 +15,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class DesktopGame {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "FileNinja";
 		cfg.height = 800;

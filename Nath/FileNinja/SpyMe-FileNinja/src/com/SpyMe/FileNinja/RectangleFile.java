@@ -13,7 +13,9 @@ public class RectangleFile extends Rectangle implements Poolable{
 
 
 	private static final long serialVersionUID = 1L;
+	private final float speed = 2;
 	public int fileType;
+	
 	/*
 	 * 0 :: red
 	 * 1 :: blue
@@ -43,18 +45,18 @@ public class RectangleFile extends Rectangle implements Poolable{
 		if(!caught){
 			if(fileType == 1)
 			{
-				y += 100 * delta;
+				y += speed * 100 * delta;
 			}
 			else if(fileType == 0)
 			{
-				y += 100 * delta;
+				y += speed * 100 * delta;
 				x = x0 + 50*MathUtils.cosDeg(y);
 				x = x < 0 ? 0 : x;
 				x = x > 480 - 64 ? 480 - 64 : x;
 			}
 			else if(fileType == 2)
 			{
-				y += 400 * delta;
+				y += speed * 400 * delta;
 			}
 		}
 		else
@@ -69,6 +71,7 @@ public class RectangleFile extends Rectangle implements Poolable{
 		caught = true;
 		xStore = store * 100 + 20;
 		x0 = x;
+		y0 = y;
 	}
 	
 	

@@ -77,20 +77,23 @@ public class MainScreen implements Screen{
 		for(int i = 0; i < slen; i++)
 		{
 			sfile = storedFiles.get(i);
-			switch(sfile.fileType)
+			if(sfile.display)
 			{
-			case 0:
-				game.batch.draw(red, (i * 100) + 20, 800 - 70);
-				break;
-			case 1:
-				game.batch.draw(blue, (i * 100) + 20, 800 - 70);
-				break;
-			case 2:
-				game.batch.draw(green, (i * 100) + 20, 800 - 70);
-				break;
+				switch(sfile.fileType)
+				{
+				case 0:
+					game.batch.draw(red, (i * 100) + 20, 800 - 70);
+					break;
+				case 1:
+					game.batch.draw(blue, (i * 100) + 20, 800 - 70);
+					break;
+				case 2:
+					game.batch.draw(green, (i * 100) + 20, 800 - 70);
+					break;
+				}
+				game.font.draw(game.batch, sfile.stored*10+"%",(i*100)+83, 800-30);
 			}
-		}
-		
+		}		
 		game.batch.end();
 		
 
@@ -116,7 +119,7 @@ public class MainScreen implements Screen{
 		
 		if(!file.caught)
 		{
-			if(file.x > 480)
+			if(file.y > 800)
 			{
 				activFiles.removeIndex(j);
 				filePool.free(file);				
@@ -126,12 +129,10 @@ public class MainScreen implements Screen{
 		{
 			if(file.y > 800 - 70)
 			{
-				activFiles.removeIndex(j);
-				filePool.free(file);
 				
 				for(StoredFile sfile : storedFiles)
 				{
-					if(sfile.fileType == file.fileType)
+					if(sfile.fileType == file.fileType && sfile.stored < 10)
 					{
 						sfile.add();
 						d = true;
@@ -141,11 +142,15 @@ public class MainScreen implements Screen{
 				
 				if(!d)
 				{
+					
 					StoredFile sfile = storePool.obtain();
 					sfile.init(file.fileType, storedFiles.size);
 					sfile.add();
 					storedFiles.add(sfile);
 				}
+				
+				activFiles.removeIndex(j);
+				filePool.free(file);
 				
 			}
 		}
@@ -249,16 +254,12 @@ public class MainScreen implements Screen{
 						if(sfile.fileType== file.fileType)
 						{
 							file.catchFile(j);
-							sfile.add();
 							break;
 						}
 					}
 					if(j == slen)
 					{
 						file.catchFile(j);
-						sfile = storePool.obtain();
-						sfile.init(file.fileType, slen);
-						storedFiles.add(sfile);
 					}
 
 				}
