@@ -5,50 +5,62 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.spyme.menu.LogInScreen;
-import com.spyme.menu.MenuScreen;
-import com.spyme.menu.RegisterScreen;
-import com.spyme.menu.httpHandler;
+import com.spyme.fileninja.StartScreen;
+import com.spyme.menu.*;
 
+@SuppressWarnings("unused")
 public class Spyme extends Game{
 	
-//****************************************************************************************
-//****************************************************************************************
 	public SpriteBatch batch;
 	public BitmapFont font;
 	public int width;
 	public int height;
-	public int nbPoints=0;
-	public int id_enigme=0;
-	public String id_temp="";
-	public String pseudo;
-	public int niveau=0;
+	public HttpHandler httpHandler;
+	public int id_temp;
+	public Player player;
 	public static int state;
-//****************************************************************************************
-//****************************************************************************************
-
+	public String repServeur;
+	
+	@Override
 	public void create() {
 		height = Gdx.graphics.getHeight();
 		width = Gdx.graphics.getWidth();
 		batch = new SpriteBatch();
-		font = new BitmapFont(true);
-		this.setScreen(new LogInScreen(this));
+//		font = new BitmapFont(true);
+		httpHandler = new HttpHandler(this);
+		player = new Player();
+		font = new BitmapFont(Gdx.files.internal("font.fnt"),true);
+
+		this.setScreen(new EnigmaScreen(this));
 	}
-	
+	@Override
 	public void render()
 	{
 		super.render();
+		
 	}
 	
+	@Override
 	public void dispose()
 	{
 		batch.dispose();
 		font.dispose();
 	}
 
-//****************************************************************************************
-//****************************************************************************************
 	
+	private void errorPop(String err){
+		//Fonction d'affichage des error serveur (popup)
+	}
+	
+	public int decodeServ(){
+		
+		if(repServeur.length()>3){
+			String[] code = repServeur.split("/");
+			return decodeServ(Integer.parseInt(code[0]),"");
+		}
+		else
+			return decodeServ(Integer.parseInt(repServeur),"");
+	}
 	public int decodeServ(int code, String s){
     	switch (code){
     	case 100:
@@ -63,11 +75,9 @@ public class Spyme extends Game{
     		LogInScreen.messageErreur="Le pseudonyme ou le password est incorrect";
     		return 0;
     	case 104:
-    		s="Gagné";
     		return 1;
     	case 105:
-    		s="Perdu";
-    		return 0;
+    		return 1;
     	case 106:
     		s="Vous avez résolu toutes les énigmes de ce niveau. Plus d'énigmes disponibles";
     		return 0;
@@ -76,7 +86,6 @@ public class Spyme extends Game{
     		return 0;
     	}
     }
-	
 	
     public String convertSpaces(String s1){
     	String s2="";
@@ -87,64 +96,24 @@ public class Spyme extends Game{
     			s2=s2+s1.charAt(i);   	
     	return s2.toLowerCase();
     }
-	
-    public void checkUser(String answer, String psd){
-    	Integer code;
-    	if(answer.length()>3){
-    	String[] tokens=answer.split("/");
-    	id_temp=tokens[1];
-		niveau=Integer.valueOf(tokens[3]);
-		nbPoints=Integer.valueOf(tokens[2]);
-		pseudo=convertSpaces(psd);
-		this.setScreen(new MenuScreen(this));
-    	}
-    	else{
-    		code=Integer.valueOf(answer);
-    		decodeServ(code,"");
-    		}
-    	}
-    
-    public void checkIns(String answer, String psd){
-    	
-    	Integer code;
-    	if(answer.length()>3){
-    	String[] tokens=answer.split("/");
-    	id_temp=tokens[1];
-		pseudo=convertSpaces(psd);
-		this.setScreen(new MenuScreen(this));
-		//setContentView(R.layout.design_try0);
-    	}
-    	else{
-    		code=Integer.valueOf(answer);
-	    	decodeServ(code,"");
-	    	}
-    	}
 
-
+	public void httpReq(String url){
+		repServeur = null;
+		System.out.println(url);
+		httpHandler.get("http://192.168.1.24:8888/"+url);
+	}
     
-    public void checkEnigme(String answer,String result)
-    {
-    	if(answer.length()>3){
-    		String[] tokens=answer.split("/");
-    		id_enigme=Integer.valueOf(tokens[1]);
-    		result=tokens[2];
-    	}
-    	else{
-    		Integer code= Integer.valueOf(answer);
-    		decodeServ(code,result);
-    	}
-    }
-    
-    public void checkAnswerEnigme(int code,String errorM)
-    {
-    	if(decodeServ(code,errorM)==1){
-    		httpHandler handler2 = new httpHandler();
-    		nbPoints+=10/(niveau+1);
-    		System.out.println(nbPoints);
-    		
-	        String url="http://192.168.5.65:8888/updatepoints?idTemp="+id_temp+"&nbPoints="+nbPoints;
-			//String repServeur = handler2.get(url);
-    	}
-    }
+	public class Player{
+		public String pseudo;
+		public String id_temp;
+		public int score;
+		public int level;
+		
+		public Player(){
+			id_temp = pseudo = "";
+			score = level = 0;
+			id_temp = "-1317385271246848";
+		}
+	}
 }
 

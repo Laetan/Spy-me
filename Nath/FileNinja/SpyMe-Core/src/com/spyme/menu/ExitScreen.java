@@ -94,10 +94,9 @@ public class ExitScreen implements Screen{
 				int button) {
 			if(screenX>130&&screenX<230&&screenY>480&&screenY<540){
 				Spyme.state=2;
-				httpHandler http=new httpHandler();
-				String url="http://192.168.5.76:8888/deconnexion?pseudo="+game.pseudo;
-				 http.get(url);
-				 while(ExitScreen.coRepServeur == null){System.out.print("");}
+				String url="deconnexion?pseudo="+game.player.pseudo;
+				game.httpReq(url);
+				 while(game.repServeur == null){System.out.print("");}
 				Gdx.app.exit();
 			}else if(screenX>260&&screenX<350&&screenY>480&&screenY<540){
 				game.setScreen(new MenuScreen(game));

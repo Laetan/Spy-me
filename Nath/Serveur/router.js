@@ -29,6 +29,7 @@ router.prototype.run = function(){
 		var id = querystring.parse(query).id;
 
 	console.log("Routing :: pathname : "+pathname);
+	console.log("Routing :: query : "+query);
 	if(typeof this.handle[pathname]==='function')
 	{
 		//this.handle[pathname](query, this.reponse);

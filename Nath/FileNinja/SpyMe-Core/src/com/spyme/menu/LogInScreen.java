@@ -86,9 +86,35 @@ public class LogInScreen implements Screen{
 	public void resume() {
 	}
 
+	
+    public void checkUser(String answer, String psd){
+    	Integer code;
+    	if(answer.length()>3){
+    	String[] tokens=answer.split("/");
+    	game.player.id_temp=tokens[1];
+		game.player.level=Integer.valueOf(tokens[3]);
+		game.player.score=Integer.valueOf(tokens[2]);
+		game.player.pseudo=game.convertSpaces(psd);
+		game.setScreen(new MenuScreen(game));
+    	}
+    	else{
+    		code=Integer.valueOf(answer);
+    		game.decodeServ(code,"");
+    		}
+    	}
+
+	
+	
 	public void dispose() {
+		for(Texture t : textures){
+			t.dispose();
+		}
+		font.dispose();
+		font2.dispose();
 	}
 
+	
+	
 //****************************************************************************************
 //****************************************************************************************
 	
@@ -127,13 +153,13 @@ public class LogInScreen implements Screen{
 				}
 				else if(screenX>game.width/5&&screenX<game.width/5+game.width/4){
 					Spyme.state=0;
-					httpHandler http=new httpHandler();
-					String url="http://192.168.5.76:8888/connexion?pseudo="+game.convertSpaces(message)+"&password="+game.convertSpaces(message2);
-					http.get(url);
-					while(coRepServeur == null){System.out.print("");}
-					game.checkUser(coRepServeur,message);
+					String url="connexion?pseudo="+game.convertSpaces(message)+"&password="+game.convertSpaces(message2);
+					game.httpReq(url);
+					while(game.repServeur == null){System.out.print("");}
+					checkUser(game.repServeur,message);
 					coRepServeur=null;
-					 }
+					
+				}
 			}
 			else if(screenY<game.height/1.3f+game.width/10&&screenY>game.height/1.32f){
 				game.setScreen(new RegisterScreen(game));

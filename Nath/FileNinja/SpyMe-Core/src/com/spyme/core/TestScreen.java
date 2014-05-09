@@ -30,6 +30,11 @@ public class TestScreen implements Screen{
 		game.batch.end();
 	}
 
+	private void testConn(){
+		//String ans = game.httpRequest("connexion?pseudo=nico&password=crystal");
+	
+		//System.out.println("Test Connexion : "+ans);
+	}
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
@@ -90,8 +95,8 @@ public class TestScreen implements Screen{
 		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 			// TODO Auto-generated method stub
 			
-			game.setScreen(new StartScreen(game));
-			
+			//game.setScreen(new StartScreen(game));
+			testConn();
 			return false;
 		}
 

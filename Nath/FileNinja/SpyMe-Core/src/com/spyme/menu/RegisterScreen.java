@@ -123,13 +123,12 @@ public class RegisterScreen implements Screen{
 					 if(samePw(message1,message2)==1)
 				        {  
 						 Spyme.state=1;
-						 httpHandler http=new httpHandler();
-						 String url="http://192.168.5.76:8888/inscription?pseudo="+game.convertSpaces(message)+"&password="+game.convertSpaces(message2);
-						 http.get(url);
-						 while(RegisterScreen.coRepServeur == null){System.out.println(RegisterScreen.coRepServeur);}
+						 String url="inscription?pseudo="+game.convertSpaces(message)+"&password="+game.convertSpaces(message2);
+						 game.httpReq(url);
+						 while(game.repServeur == null){System.out.println(game.repServeur);}
 						System.out.println(RegisterScreen.coRepServeur);
 						//if(RegisterScreen.coRepServeur != null){
-						game.checkIns(coRepServeur, message);
+						checkIns(game.repServeur, message);
 						RegisterScreen.coRepServeur=null;}
 						 //valider
 				}else if(screenX>290&&screenX<480){
@@ -140,6 +139,23 @@ public class RegisterScreen implements Screen{
 			return false;
 		}
 
+	    public void checkIns(String answer, String psd){
+	    	
+	    	Integer code;
+	    	if(answer.length()>3){
+		    	String[] tokens=answer.split("/");
+		    	game.player.id_temp=tokens[1];
+				game.player.pseudo=game.convertSpaces(psd);
+				game.setScreen(new MenuScreen(game));
+	    	}
+	    	else{
+	    		code=Integer.valueOf(answer);
+		    	game.decodeServ(code,"");
+		    	}
+	    	}
+
+
+		
 		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 			return false;
 		}

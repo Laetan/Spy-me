@@ -59,7 +59,7 @@ public class OptionScreen implements Screen{
 	}
 
 	public void dispose() {
-		
+		texture.dispose();
 	}
 	
 //****************************************************************************************
@@ -83,15 +83,14 @@ public class OptionScreen implements Screen{
 				int button) {
 			if(screenX>95&&screenX<390&&screenY>370&&screenY<480){
 				Spyme.state=3;
-				httpHandler http=new httpHandler();
-				String url="http://192.168.5.76:8888/reinitialisation?pseudo="+game.pseudo;
-				http.get(url);
-				while(coRepServeur == null){System.out.println(coRepServeur);}
+				String url="reinitialisation?pseudo="+game.player.pseudo;
+				game.httpReq(url);
+				while(game.repServeur == null){System.out.println(game.repServeur);}
 				//if(coRepServeur!=null){
-				System.out.println(coRepServeur);
-				game.niveau=0;
-				game.nbPoints=0;
-				 coRepServeur=null;
+				System.out.println(game.repServeur);
+				game.player.level=0;
+				game.player.score=0;
+				coRepServeur=null;
 				game.setScreen(new MenuScreen(game));
 			}
 			

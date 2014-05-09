@@ -16,9 +16,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>PARENT_LOC</name>
+			<name>assets</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/SpyMe-Core-android/assets</locationURI>
+			<location>C:/Users/Nathanael/workspace/SpyMe/SpyMe-Core-android/assets</location>
 		</link>
 	</linkedResources>
 </projectDescription>
