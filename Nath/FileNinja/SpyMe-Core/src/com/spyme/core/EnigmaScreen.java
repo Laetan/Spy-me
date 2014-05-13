@@ -1,7 +1,6 @@
 package com.spyme.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -24,12 +23,14 @@ public class EnigmaScreen implements Screen{
 	BitmapFont font;
 	boolean keyPressed, synchro;
 	Texture button;
+	Texture quitButton;
 	
 	public EnigmaScreen(Spyme gam){
 		game = gam;
 		font = new BitmapFont();
 		cam = new OrthographicCamera();
 		button = new Texture(Gdx.files.internal("valider2.png"));
+		quitButton = new Texture(Gdx.files.internal("quit.png"));
 		cam.setToOrtho(false, game.width, game.height);
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
 		cam.update();
@@ -54,6 +55,7 @@ public class EnigmaScreen implements Screen{
 		if(synchro){checkRep();}
 		
 		game.batch.begin();
+			game.batch.draw(quitButton, 10, 10);
 			if(id_enigma == -1){
 				font.setScale(2);
 				font.draw(game.batch, "Loading...", game.width/2 - 50, game.height/2-10);
@@ -150,6 +152,13 @@ public class EnigmaScreen implements Screen{
         
 	}
 	
+	private void redo(){
+		id_enigma = -1;
+		enigma[0]="";
+		answer = "";
+		getEnigma();
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
@@ -185,6 +194,7 @@ public class EnigmaScreen implements Screen{
 		// TODO Auto-generated method stub
 		font.dispose();
 		button.dispose();
+		quitButton.dispose();
 	}
 
 	public String convertSpaces(String s1){
@@ -227,11 +237,16 @@ public class EnigmaScreen implements Screen{
 
 		@Override
 		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+			Vector3 touchPos = new Vector3(screenX, screenY, 0);
+			cam.unproject(touchPos);
+			
+			if(touchPos.x>10 && touchPos.x < 42 && touchPos.y > 10 && touchPos.y < 42){
+				game.setScreen(new TestScreen(game));
+				dispose();
+			}
+			
 			if(state == 0){
-
 				Gdx.input.setOnscreenKeyboardVisible(true);
-				Vector3 touchPos = new Vector3(screenX, screenY, 0);
-				cam.unproject(touchPos);
 				System.out.println(touchPos.x+" : "+touchPos.y);
 				if(answer.length() > 0 && touchPos.x > game.width/2-128 && touchPos.x < game.width/2+128 && touchPos.y > 20 && touchPos.y < 148){
 					sendAnswer();
@@ -239,6 +254,7 @@ public class EnigmaScreen implements Screen{
 			}else if(state == 1){
 				
 				//Jeu Gagné. Switch Screen
+				redo();
 				
 			}else if(state == 2){
 				answer = "";

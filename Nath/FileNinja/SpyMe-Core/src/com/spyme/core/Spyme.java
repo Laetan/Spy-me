@@ -100,7 +100,7 @@ public class Spyme extends Game{
 	public void httpReq(String url){
 		repServeur = null;
 		System.out.println(url);
-		httpHandler.get("http://192.168.1.24:8888/"+url);
+		httpHandler.get("http://192.168.56.1:8888/"+url);
 	}
     
 	public class Player{
