@@ -24,7 +24,7 @@ public class OptionScreen implements Screen{
 	public OptionScreen(Spyme gam){
 		Gdx.graphics.setContinuousRendering(true);
 		game = gam;
-		texture = new Texture(Gdx.files.internal("newgame.png"));
+		texture = new Texture(Gdx.files.internal("option_t.png"));
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, game.width, game.height);
 		cam.update();
@@ -34,7 +34,7 @@ public class OptionScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
-		game.batch.draw(texture,game.width/6,game.height/3,game.width/1.5f,game.height/3.5f);
+		game.batch.draw(texture,0,0,game.width,game.height);
 		game.batch.end();
 	}
 
@@ -81,16 +81,18 @@ public class OptionScreen implements Screen{
 
 		public boolean touchDown(int screenX, int screenY, int pointer,
 				int button) {
-			if(screenX>95&&screenX<390&&screenY>370&&screenY<480){
+			if(screenX>0.18f*game.width&&screenX<0.94f*game.width&&screenY>0.525f*game.height&&screenY<0.62f*game.height){
 				Spyme.state=3;
 				String url="reinitialisation?pseudo="+game.player.pseudo;
 				game.httpReq(url);
 				while(game.repServeur == null){System.out.println(game.repServeur);}
+
 				//if(coRepServeur!=null){
 				System.out.println(game.repServeur);
 				game.player.level=0;
 				game.player.score=0;
 				coRepServeur=null;
+
 				game.setScreen(new MenuScreen(game));
 			}
 			
