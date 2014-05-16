@@ -18,12 +18,12 @@ public class RectangleFile extends Rectangle implements Poolable{
 	public int fileType;
 	
 	/*
-	 * 0 :: red
-	 * 1 :: blue
-	 * 2 :: green
+	 * 0 :: buffer
+	 * 1 :: file
+	 * 2 :: mail
 	 * 3 :: music
-	 * 4 :: par
-	 * 5 :: zir
+	 * 4 :: yt
+	 * 5 :: zip
 	 * 6 :: virus
 	 */
 	private static final int swidth = Gdx.graphics.getWidth();
@@ -34,6 +34,7 @@ public class RectangleFile extends Rectangle implements Poolable{
 	private int sens;
 	boolean caught;
 	private float xStore;
+	private float accx, accy, vitx, vity;
 	
 	public RectangleFile(){
 		fileType = -1;
@@ -46,25 +47,16 @@ public class RectangleFile extends Rectangle implements Poolable{
 	
 	public void init(int type){
 		fileType = type;
-		traj = MathUtils.random(0, 3);
+		if(type == 0)
+			traj = 4;
+		else
+			traj = MathUtils.random(0, 3);
 		sens = MathUtils.round(MathUtils.random(0,1));
 		x0 = x = MathUtils.random(0, swidth-64);
-		y0 = y = 0;
-		switch(fileType){
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-			height = 64;
-			width = 64;
-			break;
-		case 4:
-		case 5:
-		case 6:
-			height = 128;
-			width = 64;
-			break;
-		}
+		y0 = y = -height;
+		accx = accy = vitx = 0;
+		vity = speed * 100;
+
 	}
 	
 	public void update(float delta){
@@ -86,6 +78,9 @@ public class RectangleFile extends Rectangle implements Poolable{
 				x += speed * sens * 300 * delta;
 				sens = (x < 0 || x > swidth - 64 ) ? sens*-1 : sens;
 				break;
+			case 4:
+				randomTraj(delta);
+				break;
 			default:
 					break;
 			}	
@@ -105,6 +100,28 @@ public class RectangleFile extends Rectangle implements Poolable{
 		y0 = y;
 	}
 	
+	private void randomTraj(float delta){
+		accx = MathUtils.random(-1000,1000);
+		accy = MathUtils.random(-1000,1000);
+		if(vitx<150*delta && vitx>-150*delta && vity>-200*delta && vity<200*delta){
+			accx*=2;
+			accy*=2;
+		}
+		
+		vitx += accx*delta;
+		vity += accy*delta;
+		
+		y += vity*delta;
+		if(y <0 && vity<0){
+			y -= 2*vity*delta;
+			vity*=-1;
+		}
+		x += vitx*delta;
+		if(x <0 || x> swidth-width){
+			x -= 2*vitx*delta;
+			vitx*=-1;
+		}
+	}
 	
 	@Override
 	public void reset() {

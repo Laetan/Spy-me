@@ -52,14 +52,13 @@ public class MainScreen implements Screen{
 		game = gam;
 		System.out.print("ok");
 		textures = new Texture[7];
-		textures[0] = new Texture(Gdx.files.internal("red_sphere.png"));
-		textures[1] = new Texture(Gdx.files.internal("blue_sphere.png"));
-		textures[2] = new Texture(Gdx.files.internal("green_sphere.png"));
-		textures[3] = new Texture(Gdx.files.internal("music.png"));
-		textures[4] = new Texture(Gdx.files.internal("par.png"));
-		textures[5] = new Texture(Gdx.files.internal("zir.png"));
-		textures[6] = new Texture(Gdx.files.internal("virus.png"));
-//		textures[6] = new Texture(Gdx.files.internal("dir.png"));
+		textures[0] = new Texture(Gdx.files.internal("buffer_icon.png"));
+		textures[1] = new Texture(Gdx.files.internal("file_icon.png"));
+		textures[2] = new Texture(Gdx.files.internal("mail_icon.png"));
+		textures[3] = new Texture(Gdx.files.internal("sound_icon.png"));
+		textures[4] = new Texture(Gdx.files.internal("yt_icon.png"));
+		textures[5] = new Texture(Gdx.files.internal("zip_icon.png"));
+		textures[6] = new Texture(Gdx.files.internal("virus_icon.png"));
 		buffer = new Texture(Gdx.files.internal("buffer.jpg"));
 		
 		cam = new OrthographicCamera();

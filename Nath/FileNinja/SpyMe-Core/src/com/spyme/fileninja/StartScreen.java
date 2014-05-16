@@ -18,7 +18,7 @@ public class StartScreen implements Screen{
 	
 	public StartScreen(Spyme gam){
 		game = gam;
-		texture = new Texture(Gdx.files.internal("red_sphere.png"));
+		texture = new Texture(Gdx.files.internal("buffer_icon.png"));
 		System.out.print("ok");
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, game.width, game.height);

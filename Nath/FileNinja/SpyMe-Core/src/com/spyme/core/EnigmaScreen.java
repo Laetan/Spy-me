@@ -24,6 +24,7 @@ public class EnigmaScreen implements Screen{
 	boolean keyPressed, synchro;
 	Texture button;
 	Texture quitButton;
+	Texture background;
 	
 	public EnigmaScreen(Spyme gam){
 		game = gam;
@@ -31,6 +32,7 @@ public class EnigmaScreen implements Screen{
 		cam = new OrthographicCamera();
 		button = new Texture(Gdx.files.internal("valider2.png"));
 		quitButton = new Texture(Gdx.files.internal("quit.png"));
+		background = new Texture(Gdx.files.internal("enigme.png"));
 		cam.setToOrtho(false, game.width, game.height);
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
 		cam.update();
@@ -55,21 +57,19 @@ public class EnigmaScreen implements Screen{
 		if(synchro){checkRep();}
 		
 		game.batch.begin();
+			game.batch.draw(background, 0, 0, game.width, game.height);
 			game.batch.draw(quitButton, 10, 10);
 			if(id_enigma == -1){
 				font.setScale(2);
-				font.draw(game.batch, "Loading...", game.width/2 - 50, game.height/2-10);
+				font.draw(game.batch, "Loading...", game.width/2 - 50, game.height/2+50);
 			}
 			else{
 				font.setScale(1);
 				int i = 0;
 				for(String s : enigma){
-					if(s!=null)font.draw(game.batch, s, game.width/2 - 3 * s.length(), game.height- 20*(++i) );
+					if(s!=null)font.draw(game.batch, s, game.width/2 - 3 * s.length(), game.height- 40*(++i)-10 );
 				}
-				font.draw(game.batch, answer, game.width/2 - 3*answer.length(), game.height/2);
-
-				if(answer.length()>0)
-					game.batch.draw(button, game.width/2-128, 20);
+				font.draw(game.batch, answer, game.width/2 - 3*answer.length(), game.height/3);
 			}
 		
 
@@ -107,8 +107,8 @@ public class EnigmaScreen implements Screen{
 			while(true){
 				l_enigma = enigma[j].length();
 				System.out.println(l_enigma);
-				if(l_enigma>40){
-					for(int i = 30;i<l_enigma;i++){
+				if(l_enigma>50){
+					for(int i = 40;i<l_enigma;i++){
 						if(enigma[j].charAt(i)==' '){
 							enigma[j+1]=enigma[j].substring(i+1);
 							enigma[j]=enigma[j].substring(0, i);
@@ -248,12 +248,12 @@ public class EnigmaScreen implements Screen{
 			if(state == 0){
 				Gdx.input.setOnscreenKeyboardVisible(true);
 				System.out.println(touchPos.x+" : "+touchPos.y);
-				if(answer.length() > 0 && touchPos.x > game.width/2-128 && touchPos.x < game.width/2+128 && touchPos.y > 20 && touchPos.y < 148){
+				if(answer.length() > 0 && touchPos.x > game.width/4 && touchPos.x < game.width*.75 && touchPos.y > 60 && touchPos.y < 120){
 					sendAnswer();
 				}
 			}else if(state == 1){
 				
-				//Jeu Gagné. Switch Screen
+				//Jeu Gagné. Nouvelle enigme
 				redo();
 				
 			}else if(state == 2){

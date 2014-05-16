@@ -36,6 +36,7 @@ public void get(String posturl){
 
 			game.repServeur = httpResponse.getResultAsString();
 			
+			
 //			httpHandler.text=httpResponse.getResultAsString();			
 //			if(Spyme.state==0){
 //				LogInScreen.coRepServeur=httpHandler.text;
