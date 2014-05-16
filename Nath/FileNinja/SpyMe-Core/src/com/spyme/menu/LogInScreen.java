@@ -17,7 +17,7 @@ public class LogInScreen implements Screen{
 //****************************************************************************************
 	Spyme game;
 	OrthographicCamera cam;
-	Texture [] textures;
+	Texture texture;
 	public static String coRepServeur;
 	private BitmapFont font ;
 	private BitmapFont font2 ;
@@ -40,11 +40,7 @@ public class LogInScreen implements Screen{
 		font = new BitmapFont();
 		font2 = new BitmapFont();
 		display=0;
-		textures = new Texture[4];
-		textures[0] = new Texture(Gdx.files.internal("connexion.png"));
-		textures[1] = new Texture(Gdx.files.internal("valider2.png"));
-		textures[2] = new Texture(Gdx.files.internal("annuler2.png"));
-		textures[3] = new Texture(Gdx.files.internal("incription_co.png"));
+		texture=new Texture(Gdx.files.internal("connexion_t.png"));
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, game.width, game.height);
 		cam.update();
@@ -59,14 +55,12 @@ public class LogInScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
-		game.batch.draw(textures[0],game.width/10,game.height/3,game.width/1.3f,game.height/2.5f);
-		game.batch.draw(textures[1],game.width/5,game.height/3.1f,game.width/4,game.width/5);
-		game.batch.draw(textures[2],4*game.width/5-game.width/4,game.height/3.1f,game.width/4,game.width/5);
-		game.batch.draw(textures[3],game.width/10,game.height/6.5f,game.width/1.2f,game.width/5);
+		game.batch.draw(texture,0,0,game.width,game.height);
 		font.setColor(Color.BLACK);
-		font.draw(game.batch, message, game.width/2.75f, game.height/1.68f);
-		font2.draw(game.batch, messageErreur, game.width/10, game.height/1.3f);
-		font.draw(game.batch, message2, game.width/2.75f, game.height/2);
+		font.draw(game.batch, message, game.width/2.3f, game.height/1.7f);
+		font2.draw(game.batch, messageErreur, game.width/5, game.height/1.17f);
+		font.draw(game.batch, message2, game.width/2.3f, game.height/2.04f);
+		
 		game.batch.end();
 	}
 	
@@ -86,7 +80,6 @@ public class LogInScreen implements Screen{
 	public void resume() {
 	}
 
-	
     public void checkUser(String answer, String psd){
     	Integer code;
     	if(answer.length()>3){
@@ -103,18 +96,13 @@ public class LogInScreen implements Screen{
     		}
     	}
 
-	
-	
 	public void dispose() {
-		for(Texture t : textures){
-			t.dispose();
-		}
-		font.dispose();
-		font2.dispose();
+		
+			texture.dispose();
+		
+
 	}
 
-	
-	
 //****************************************************************************************
 //****************************************************************************************
 	
@@ -137,33 +125,33 @@ public class LogInScreen implements Screen{
 		 * trigger the events
 		 */
 		public boolean touchDown(int screenX, int screenY, int pointer,int button) {
-			if(screenX<game.width/2.75f+300&&screenX>game.width/2.75f){
-				if(screenY<game.height/1.68f-20&&screenY>game.height/1.68f-70){
-					Gdx.input.getTextInput(listener, "mdp", "");
-					display=1;
-				}
-				else if(screenY<game.height/1.68f-90&&screenY>game.height/1.68f-140){
+			if(screenX<0.83f*game.width&&screenX>0.41f*game.width){
+				if(screenY<0.507f*game.height&&screenY>0.39f*game.height){
 					Gdx.input.getTextInput(listener, "pseudonyme", "");
 					display=0;
 				}
+				else if(screenY<0.59f*game.height&&screenY>0.51f*game.height){
+					Gdx.input.getTextInput(listener, "mot de passe", "");
+					display=1;
+				}
 			}
-			if(screenY<game.height/1.48f&&screenY>game.height/1.7f){
-				if(screenX>4*game.width/5-game.width/4&&screenX<4*game.width/5){
+			if(screenY<0.7f*game.height&&screenY>0.637f*game.height){
+				if(screenX>0.57f*game.width&&screenX<0.83f*game.width){
 					Gdx.app.exit();
 				}
-				else if(screenX>game.width/5&&screenX<game.width/5+game.width/4){
+				else if(screenX>0.187f*game.width&&screenX<0.41f*game.width){
 					Spyme.state=0;
 					String url="connexion?pseudo="+game.convertSpaces(message)+"&password="+game.convertSpaces(message2);
 					game.httpReq(url);
 					while(game.repServeur == null){System.out.print("");}
 					checkUser(game.repServeur,message);
 					coRepServeur=null;
-					
-				}
+					 }
 			}
-			else if(screenY<game.height/1.3f+game.width/10&&screenY>game.height/1.32f){
+			else if(screenY<0.9f*game.height&&screenY>0.81f*game.height){
 				game.setScreen(new RegisterScreen(game));
 				}
+			System.out.println(screenX+" "+screenY);
 			return false;
 		}
 

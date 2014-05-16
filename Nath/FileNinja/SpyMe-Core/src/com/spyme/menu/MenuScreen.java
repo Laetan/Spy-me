@@ -1,11 +1,11 @@
 package com.spyme.menu;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.spyme.core.Plateau;
 import com.spyme.core.Spyme;
 
 public class MenuScreen implements Screen{
@@ -15,7 +15,7 @@ public class MenuScreen implements Screen{
 		
 	Spyme game;
 	OrthographicCamera cam;
-	Texture [] textures;
+	Texture  texture;
 	
 //****************************************************************************************
 //****************************************************************************************
@@ -23,15 +23,7 @@ public class MenuScreen implements Screen{
 	public MenuScreen(Spyme gam){
 		Gdx.graphics.setContinuousRendering(true);
 		game = gam;
-		textures = new Texture[8];
-		textures[0] = new Texture(Gdx.files.internal("continuer_m.png"));
-		textures[1] = new Texture(Gdx.files.internal("continuer_m2.png"));
-		textures[2] = new Texture(Gdx.files.internal("options_m.png"));
-		textures[3] = new Texture(Gdx.files.internal("options_m2.png"));
-		textures[4] = new Texture(Gdx.files.internal("aide_m.png"));
-		textures[5] = new Texture(Gdx.files.internal("aide_m2.png"));
-		textures[6] = new Texture(Gdx.files.internal("deconnexion_m.png"));
-		textures[7] = new Texture(Gdx.files.internal("deconnexion_m2.png"));
+		texture = new Texture(Gdx.files.internal("menu_t.png"));
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, game.width, game.height);
 		cam.update();
@@ -41,9 +33,7 @@ public class MenuScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
-		for(int i=0;i<textures.length;i=i+2){
-			game.batch.draw(textures[i],game.width/10,game.height/1.6f-i*50,game.width/1.2f,game.width/5);
-		}
+		game.batch.draw(texture,0,0,game.width,game.height);
 		game.batch.end();
 	}
 	
@@ -91,17 +81,18 @@ public class MenuScreen implements Screen{
 
 		public boolean touchDown(int screenX, int screenY, int pointer,
 				int button) {
-			if(screenY<310&&screenY>240){
-				//game.setScreen(new PlateauScreen(game));
-				System.out.println("on lance le plateau");
-			}else if(screenY<410&&screenY>350){
+			if(screenY<0.45f*game.height&&screenY>0.33f*game.height){
+				game.setScreen(new Plateau(game));
+				//System.out.println("on lance le plateau");
+			}else if(screenY<0.57f*game.height&&screenY>0.46f*game.height){
 				game.setScreen(new OptionScreen(game));
-			}else if(screenY<500&&screenY>430){
+			}else if(screenY<0.69f*game.height&&screenY>0.59f*game.height){
 				//game.setScreen(new HelpScreen(game));
 				System.out.println("on lance le menu d'aide");	
-			}else if(screenY>530&&screenY<590){
+			}else if(screenY>0.7f*game.height&&screenY<0.82f*game.height){
 				game.setScreen(new ExitScreen(game));
 			}
+			System.out.println(screenY);
 			return false;
 		}
 

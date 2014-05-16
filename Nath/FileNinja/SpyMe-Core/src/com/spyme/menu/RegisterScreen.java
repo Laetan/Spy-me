@@ -17,7 +17,7 @@ public class RegisterScreen implements Screen{
 //****************************************************************************************
 	Spyme game;
 	OrthographicCamera cam;
-	Texture [] textures;
+	Texture  texture;
 	private MyTextInputListener listener;
 	private BitmapFont font ;
 	private BitmapFont font2 ;
@@ -36,12 +36,7 @@ public class RegisterScreen implements Screen{
 		font2 = new BitmapFont();
 		font.setColor(Color.BLACK);
 		game = gam;
-		textures = new Texture[5];
-		textures[0] = new Texture(Gdx.files.internal("inscription.png"));
-		textures[1] = new Texture(Gdx.files.internal("annuler.png"));
-		textures[2] = new Texture(Gdx.files.internal("annuler2.png"));
-		textures[3] = new Texture(Gdx.files.internal("valider.png"));
-		textures[4] = new Texture(Gdx.files.internal("valider2.png"));
+		texture = new Texture(Gdx.files.internal("inscription_t.png"));
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, game.width, game.height);
 		cam.update();
@@ -52,13 +47,11 @@ public class RegisterScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
-		game.batch.draw(textures[0],game.width/6,game.height/3,game.width/1.5f,game.height/2.5f);
-		game.batch.draw(textures[4],game.width/5,game.height/3.f,game.width/4,game.width/6);
-		game.batch.draw(textures[2],4*game.width/5-game.width/4,game.height/3.f,game.width/4,game.width/6);
-		font.draw(game.batch, message, game.width/2.6f, game.height/1.6f);
-		font2.draw(game.batch, messageErreur, game.width/10, game.height/1.35f);
-		font.draw(game.batch, message2, game.width/2.6f, game.height/1.82f);
-		font.draw(game.batch, message1, game.width/2.6f, game.height/2.12f);
+		game.batch.draw(texture,0,0,game.width,game.height);
+		font.draw(game.batch, message, game.width/2.3f, game.height/1.56f);
+		font2.draw(game.batch, messageErreur, game.width/5, game.height/1.35f);
+		font.draw(game.batch, message2, game.width/2.3f, game.height/1.83f);
+		font.draw(game.batch, message1, game.width/2.3f, game.height/2.23f);
 		game.batch.end();
 	}
 	
@@ -105,37 +98,38 @@ public class RegisterScreen implements Screen{
 
 		public boolean touchDown(int screenX, int screenY, int pointer,
 				int button) {
-			if(screenX>180&&screenX<385){
-				if(screenY>325&&screenY<350){
+			if(screenX>0.42f*game.width&&screenX<0.83f*game.width){
+				if(screenY>0.34f*game.height&&screenY<0.46f*game.height){
 					Gdx.input.getTextInput(listener, "pseudo", "");
 					display=0;
-				}else if(screenY>380&&screenY<410){
+				}else if(screenY>0.47f*game.height&&screenY<0.555f*game.height){
 					Gdx.input.getTextInput(listener, "mdp", "");
 					display=1;
-				}else if(screenY>430&&screenY<465){
+				}else if(screenY>0.56f*game.height&&screenY<0.65f*game.height){
 					Gdx.input.getTextInput(listener, "verification mdp", "");
 					display=2;
 				}
 				
 			}
-			if(screenY>480&&screenY<550){
-				if(screenX>120&&screenX<210){
+			if(screenY>0.65f*game.height&&screenY<0.73f*game.height){
+				if(screenX>0.16f*game.width&&screenX<0.39f*game.width){
 					 if(samePw(message1,message2)==1)
 				        {  
 						 Spyme.state=1;
 						 String url="inscription?pseudo="+game.convertSpaces(message)+"&password="+game.convertSpaces(message2);
 						 game.httpReq(url);
 						 while(game.repServeur == null){System.out.println(game.repServeur);}
-						System.out.println(RegisterScreen.coRepServeur);
+
 						//if(RegisterScreen.coRepServeur != null){
-						checkIns(game.repServeur, message);
+						 checkIns(game.repServeur, message);
 						RegisterScreen.coRepServeur=null;}
 						 //valider
-				}else if(screenX>290&&screenX<480){
+				}else if(screenX>0.57f*game.width&&screenX<0.82f*game.width){
 					game.setScreen(new LogInScreen(game));
 				}
 			}
 			//}
+			System.out.println(screenX+" "+screenY);
 			return false;
 		}
 
@@ -155,7 +149,6 @@ public class RegisterScreen implements Screen{
 	    	}
 
 
-		
 		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 			return false;
 		}

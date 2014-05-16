@@ -15,7 +15,7 @@ public class ExitScreen implements Screen{
 		
 	Spyme game;
 	OrthographicCamera cam;
-	Texture [] textures;
+	Texture texture;
 	public static String coRepServeur;
 	
 //****************************************************************************************
@@ -27,12 +27,7 @@ public class ExitScreen implements Screen{
 	public ExitScreen(Spyme gam){
 		Gdx.graphics.setContinuousRendering(true);
 		game = gam;
-		textures = new Texture[5];
-		textures[0] = new Texture(Gdx.files.internal("deconnexion.png"));
-		textures[1] = new Texture(Gdx.files.internal("oui1.png"));
-		textures[2] = new Texture(Gdx.files.internal("oui2.png"));
-		textures[3] = new Texture(Gdx.files.internal("non1.png"));
-		textures[4] = new Texture(Gdx.files.internal("non2.png"));
+		this.texture = new Texture(Gdx.files.internal("deco_t.png"));
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, game.width, game.height);
 		cam.update();
@@ -46,9 +41,7 @@ public class ExitScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
-		game.batch.draw(textures[0],game.width/6,game.height/3,game.width/1.5f,game.height/2.5f);
-		game.batch.draw(textures[2],game.width/4,game.height/3.3f,game.width/4,game.width/4);
-		game.batch.draw(textures[4],3*game.width/4-game.width/4,game.height/3.3f,game.width/4,game.width/4);
+		game.batch.draw(texture,0,0,game.width,game.height);
 		game.batch.end();
 	}
 	
@@ -92,15 +85,16 @@ public class ExitScreen implements Screen{
 		 */
 		public boolean touchDown(int screenX, int screenY, int pointer,
 				int button) {
-			if(screenX>130&&screenX<230&&screenY>480&&screenY<540){
+			if(screenY>0.64f*game.height&&screenY<0.75f*game.height){
+			if(screenX>0.19f*game.width&&screenX<0.385f*game.width){
 				Spyme.state=2;
 				String url="deconnexion?pseudo="+game.player.pseudo;
 				game.httpReq(url);
 				 while(game.repServeur == null){System.out.print("");}
 				Gdx.app.exit();
-			}else if(screenX>260&&screenX<350&&screenY>480&&screenY<540){
+			}else if(screenX>0.59f*game.width&&screenX<0.82f*game.width){
 				game.setScreen(new MenuScreen(game));
-			}
+			}}
 			return false;
 		}
 
